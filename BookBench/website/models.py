@@ -25,12 +25,6 @@ class User(models.Model):
 	'''
 	Store the user model in this class.
 	'''
-	# YEAR_IN_SCHOOL_CHOICES = (
-	#     (FRESHMAN, 'Freshman'),
-	#     (SOPHOMORE, 'Sophomore'),
-	#     (JUNIOR, 'Junior'),
-	#     (SENIOR, 'Senior'),
-	# )
 	first_name = models.CharField(max_length=30)
 	last_name = models.CharField(max_length=30)
 
@@ -45,11 +39,16 @@ class User(models.Model):
 
 class Book(models.Model):
 	'''
-	Book 	
+	Book details
 	'''
 	ISBN = models.CharField(max_length=20, primary_key=True)
 	name = models.CharField(max_length=50)
 	description = models.CharField(max_length=1000)
+
+	# list of authors, publications, genres
+	authors = models.ManyToManyField("Author")
+	genres = models.ManyToManyField("Genre")
+	publication = models.ForeignKey("Publications", on_delete=models.CASCADE)
 
 
 class Author(models.Model):
@@ -73,11 +72,20 @@ class Review(models.Model):
 	timestamp = models.DateTimeField(auto_now=True)
 	rating = models.IntegerField(default=1, choices=RATINGS)
 
+	# details like user who reviewed and book on which review 
+	# is given
+	review_user = models.ForeignKey("User", on_delete=models.CASCADE)
+	review_book = models.ForeignKey("Book", on_delete=models.CASCADE)
+
 
 class Report(models.Model):
 	ID = models.AutoField(primary_key=True)
 	text = models.CharField(max_length=1000)
 	timestamp = models.DateTimeField(auto_now=True)	
+
+	# user who reported and the review on which report was given
+	report_user = models.ForeignKey("User", on_delete=models.CASCADE)
+	on_review = models.ForeignKey("Review", on_delete=models.CASCADE)
 
 
 class UserOwnedBook(models.Model):
@@ -98,8 +106,8 @@ class Review_is_helpful(models.Model):
 	ID = models.AutoField(primary_key=True)
 	is_helpful = models.BooleanField()
 
-	# associated user who gave the review
-	UID = models.ForeignKey('User', on_delete=models.CASCADE)
-	RID = models.ForeignKey('Review', on_delete=models.CASCADE)
+	# associated user who gave the review, and the review itself
+	review_user = models.ForeignKey('User', on_delete=models.CASCADE)
+	on_review = models.ForeignKey('Review', on_delete=models.CASCADE)
 
 
