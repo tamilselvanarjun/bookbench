@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.base_user import BaseUserManager
 
 USER_STATUS = (	
 	('AD', 'Admin'),
@@ -21,20 +23,60 @@ BOOK_READ_STATUS = (
 RATINGS = ((1, 1), (2, 2), (3, 3), (4, 4), (5, 5))
 
 
-class User(models.Model):
+class BookBenchUserManager(BaseUserManager):
+	use_in_migrations = True
+
+	def _create_user(self, email, password, **extra_fields):
+	
+		if not email:
+			raise ValueError("The given email must be set")
+		email = self.normalize_email(email)
+		user = self.model(email=email, **extra_fields)
+		user.set_password(password)
+		user.save(using=self._db)
+		return user
+
+	def create_user(self, email, password=None, **extra_fields):
+		extra_fields.setdefault("is_superuser", False)
+		return self._create_user(email, password, **extra_fields)
+
+	def create_superuser(self, email, password, **extra_fields):
+		extra_fields.setdefault("is_superuser", True)
+		if extra_fields.get("is_superuser") is not True:
+			raise ValueError("Superuser must be true.")
+
+		return self._create_user(email, password, **extra_fields)
+
+
+
+class User(AbstractBaseUser):
 	'''
 	Store the user model in this class.
 	'''
+	objects = BookBenchUserManager()
+
 	first_name = models.CharField(max_length=30)
 	last_name = models.CharField(max_length=30)
 
 	ID = models.AutoField(primary_key=True)
 	email = models.EmailField(max_length=254, unique=True)
 	# calculate sha256sum
-	password = models.CharField(max_length=64)
+	# password = models.CharField(max_length=64)
 	longitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
 	langitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
 	status = models.CharField(max_length=2, choices=USER_STATUS, default='US')
+
+	USERNAME_FIELD = 'email'
+	EMAIL_FIELD = 'email'
+	REQUIRED_FIELDS = ['first_name', 'last_name']
+
+	def get_full_name(self):
+		full_name = '%s %s' % (self.first_name, self.last_name)
+		return full_name.strip()
+
+	def get_short_name(self):
+		return self.first_name
+
 
 
 class Book(models.Model):
@@ -109,5 +151,3 @@ class Review_is_helpful(models.Model):
 	# associated user who gave the review, and the review itself
 	review_user = models.ForeignKey('User', on_delete=models.CASCADE)
 	on_review = models.ForeignKey('Review', on_delete=models.CASCADE)
-
-
