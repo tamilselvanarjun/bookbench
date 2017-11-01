@@ -1,0 +1,9 @@
+LOG:  database system was shut down at 2017-10-24 17:07:33 IST
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  autovacuum launcher started
+LOG:  database system is ready to accept connections
+LOG:  corrupted statistics file "pg_stat/global.stat"
+ERROR:  no schema has been selected to create in at character 14
+STATEMENT:  CREATE TABLE "django_migrations" ("id" serial NOT NULL PRIMARY KEY, "app" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "applied" timestamp with time zone NOT NULL)
+ERROR:  no schema has been selected to create in at character 14
+STATEMENT:  CREATE TABLE "django_migrations" ("id" serial NOT NULL PRIMARY KEY, "app" varchar(255) NOT NULL, "name" varchar(255) NOT NULL, "applied" timestamp with time zone NOT NULL)
