@@ -1,0 +1,28 @@
+{% extends "base_page.html" %}
+
+{% block title %}Welcome to BookBench{% endblock %}
+
+{% block content %}
+<div class="">
+	<div class="center">
+		<div class="jumbotron">
+			<form action="" method="POST">
+				{# messages #}
+				{% if messages %}
+					{% for message in messages %}
+						{% if 'error' in message.tags %}
+						<p class="text-danger">{{message}}</p>
+						{% elif 'success' in message.tags %}
+						<p class="text-success">{{message}}</p>
+						{% endif %}							
+					{% endfor %}
+				{% endif %}
+
+				{% csrf_token %} <br>
+				{{form}}
+				<input type="submit" value="Login">
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
