@@ -4,6 +4,19 @@
 
 {% block content %}
 	<div class="container">
+		
+		{% if messages %}
+		<div class="container">
+			{% for message in messages %}
+				{% if 'error' in message.tags %}
+					<p class="text-error">{{message}}</p>
+				{% else %}
+					<p class="text-success">{{message}}</p>
+				{% endif %}
+			{% endfor %}			
+		</div>
+		{% endif %}
+
 		<div class="jumbotron">
 			Welcome, {{ user.get_full_name }} 
 		</div>

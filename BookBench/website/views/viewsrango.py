@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.urls import reverse
+from django.db.models import Avg
 from ..forms import *
+import json
 
 
 # Define the first home login page
@@ -116,9 +118,73 @@ def advanced_search(request):
 		print(context)
 		return render(request, '../templates/advanced_search.html', context)
 
+
 @login_required(login_url='')
 def book_details(request, ISBN):
 	user = request.user
 	book = Book.objects.get(ISBN=ISBN)
 	ctx = {'user': user, 'book': book}
+	# get the average rating
+	reviews = Review.objects.filter(review_book=book)
+	if(reviews.count() > 0):
+		ctx['avg_rating'] = reviews.aggregate(Avg("rating"))["rating__avg"]
+		ctx['reviews'] = reviews
+
+	# get review for the user
+	my_review = reviews.filter(review_user=user)
+	if my_review.count() > 0:
+		my_review = my_review[0]
+		ctx['my_rating'] = my_review.rating
+		ctx['my_review'] = my_review.text
+
 	return render(request, '../templates/book_details.html', ctx)
+
+
+@csrf_exempt
+@login_required(login_url='')
+def update_rating_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	else:
+		ctx={
+			'avg_rating':'',
+		}
+		user = request.user
+		isbn = request.POST.get('ISBN')
+		book = Book.objects.get(ISBN=isbn)
+		user_rating = request.POST.get("my_rating")
+		# create a new review object or get one
+		try:
+			review = Review.objects.get(review_user=user, review_book=book)
+		except:
+			review = Review.objects.create(review_user=user, review_book=book)
+		review.rating = user_rating
+		review.save()
+
+		# return the new average rating 
+		review = Review.objects.filter(review_book=book)
+		if review.count() > 0:
+			ctx['avg_rating'] = review.aggregate(Avg("rating"))['rating__avg']
+		return HttpResponse(json.dumps(ctx))
+
+
+@csrf_exempt
+@login_required(login_url='')
+def update_review_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	else:
+		user = request.user
+		isbn = request.POST.get('ISBN')
+		book = Book.objects.get(ISBN=isbn)
+		text = request.POST.get("my_review")
+		# create a new review object or get one
+		try:
+			review = Review.objects.get(review_user=user, review_book=book)
+		except:
+			review = Review.objects.create(review_user=user, review_book=book)
+		review.text = text
+		review.save()
+
+		# return 1 or 0
+		return HttpResponse(1)

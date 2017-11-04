@@ -11,5 +11,9 @@ urlpatterns = [
     url(r'^prefgenres/$', preferred_genres, name='preferred_genres'),
     url(r'^search/$', advanced_search, name='advanced_search'),
     url(r'^book/(?P<ISBN>[a-zA-Z0-9\-]+)$', book_details, name='book_details'),
+
+    url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
+    url(r'^api/update_review$', update_review_api, name='update_review_api'),
+
     url(r'^$', main_login_page, name='main_login_page'),
 ]

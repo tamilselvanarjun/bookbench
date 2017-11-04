@@ -4,6 +4,7 @@
 
 {% block content %}
 	<div class="container">
+		{# All details of the book #}
 		<h4>Book Details:</h4>
 		<div class="jumbotron">
 			<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
@@ -13,6 +14,83 @@
 			<b>Authors:</b> {% for author in book.authors.all %} <a href="" class="text-success">{{author.name}}</a> {% endfor %} <br>
 			<b>Genres:</b> {% for genre in book.genres.all %} <a href="" class="text-success">{{genre.name}}</a> {% endfor %} <br>
 			<b>Publication:</b> <a href="" class="text-success">{{book.publication.name}}</a> <br>
+			<input type="number" id="avg_rating" class="rating" data-size="xs" value="{{avg_rating}}" disabled="disabled" data-step="0.1">
 		</div>
+
+		{# my review #}
+		<div class="jumbotron">
+		<h4>Rate this book</h4>
+			<input type="number" id="my_rating" class="rating-loading" data-size="xs" value="{{my_rating}}">
+			{% if not my_review %}
+				{# if there is no rating, then add one #}
+				<form action="" id="reviewForm">
+					<textarea name="my_review" id="my_review" maxlength="1000" cols="100" rows="10"></textarea> <br>
+					<button type="button" id="submit_review" class="btn btn-primary">Post review</button>
+				</form>
+			{% else %}
+			<p>You have already reviewed.</p>
+			{% endif %}
+		</div>
+
+		{# All reviews #}
+		<div class="">
+			<h4>All Reviews</h4>
+			{% if reviews %}
+				{% for review in reviews %}
+					<div class="jumbotron">
+						<b>Reviewed by:</b> {{review.review_user.get_full_name|capfirst}} <br>
+						<b>Reviewed on:</b> {{review.timestamp}} <br>
+						{% if review.text %}
+						<b>Description:</b> {{review.text}} <br>
+						{% endif %}
+						<input type="number" id="{{review.ID}}" class="rating" data-size="xs" value="{{review.rating}}" disabled="disabled" data-step="1">
+					</div>
+				{% endfor %}
+			{% else %}
+			<p>There are no reviews yet.</p>
+			{% endif %}
+		</div>
+
 	</div>
+
+	
+	<!-- script -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#my_rating").rating({step: 1}).on("rating:change", function(event, value, caption) {
+				console.log(value);
+				if(value<1) {
+					alert("Rating should be at least 1");
+				}
+				/* send request to API to update */
+				$.post("{% url 'update_rating_api' %}", {
+					'ISBN' : '{{book.ISBN}}',
+					'my_rating' : value,
+				}, function(data) {
+					data = JSON.parse(data);
+					$("#avg_rating").val(data['avg_rating']);
+					$("#avg_rating").rating('update', data['avg_rating']);
+				});
+			});
+
+			/* check for my review */
+			$("#submit_review").click(function() {
+				if($("#my_review").val().length > 0) {
+					$.post("{% url 'update_review_api' %}", {
+						'ISBN': '{{book.ISBN}}',
+						'my_review' : $("#my_review").val(),
+					}, function(data) {
+						if(data == '1') {
+							$("#reviewForm").hide();
+							location.reload();
+						}
+					});
+				}
+				else {
+					alert("Write a review first.");
+				}
+			});
+		});
+	</script>
+
 {% endblock %}
