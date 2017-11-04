@@ -1,0 +1,25 @@
+{% extends "base_page.html" %}
+
+{% block title %}Enter your preferences{% endblock %}
+
+{% block content %}
+<div class="container">
+	<h3>Enter your preferences.</h3>
+	
+	<form action="" method="POST">
+	 	{% csrf_token %}
+		<select multiple="multiple" id="my-select" name="genres">
+			{% for genre in genres %}
+				<option value="{{ genre.name }}" {% if genre in user.preferred_genres.all %}selected{% endif %}>{{genre.name}}</option>
+			{% endfor %}  
+		</select>
+		<input type="submit" class="btn btn-primary" value="Update preferences">
+	</form>
+
+</div>
+<script type="text/javascript">
+	$(document).ready(function() {
+        $('#my-select').multiselect();
+    });
+</script>
+{% endblock %}

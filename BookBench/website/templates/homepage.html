@@ -8,6 +8,8 @@
 			Welcome, {{ user.get_full_name }} 
 		</div>
 
+		<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a>
+
 		<form action="{% url 'logout_view' %}" method="POST">
 			<input class="btn btn-danger" type="submit" value="Logout">
 		</form>

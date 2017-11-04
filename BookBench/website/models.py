@@ -66,6 +66,9 @@ class User(AbstractBaseUser):
 	langitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
 	status = models.CharField(max_length=2, choices=USER_STATUS, default='US')
 
+	## Extra
+	preferred_genres = models.ManyToManyField("Genre")
+
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'
 	REQUIRED_FIELDS = ['first_name', 'last_name']
