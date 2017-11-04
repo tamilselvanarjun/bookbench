@@ -115,3 +115,10 @@ def advanced_search(request):
 		}
 		print(context)
 		return render(request, '../templates/advanced_search.html', context)
+
+@login_required(login_url='')
+def book_details(request, ISBN):
+	user = request.user
+	book = Book.objects.get(ISBN=ISBN)
+	ctx = {'user': user, 'book': book}
+	return render(request, '../templates/book_details.html', ctx)

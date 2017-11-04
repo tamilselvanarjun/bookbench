@@ -1,0 +1,18 @@
+{% extends "base_page.html" %}
+
+{% block title %}Welcome to BookBench{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h4>Book Details:</h4>
+		<div class="jumbotron">
+			<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+			<b>ISBN:</b> {{book.ISBN}} <br>
+			<b>Description:</b> {{book.description|capfirst}} <br>
+		
+			<b>Authors:</b> {% for author in book.authors.all %} <a href="" class="text-success">{{author.name}}</a> {% endfor %} <br>
+			<b>Genres:</b> {% for genre in book.genres.all %} <a href="" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+			<b>Publication:</b> <a href="" class="text-success">{{book.publication.name}}</a> <br>
+		</div>
+	</div>
+{% endblock %}

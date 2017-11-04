@@ -36,7 +36,7 @@
 			{% if books.count %}
 				{% for book in books %}
 				<div class="jumbotron">
-					<h4>{{book.name|capfirst}}</h4>
+					<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
 					<b>ISBN:</b> {{book.ISBN}} <br>
 					<b>Description:</b> {{book.description|capfirst}} <br>
 			
