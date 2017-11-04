@@ -188,3 +188,16 @@ def update_review_api(request):
 
 		# return 1 or 0
 		return HttpResponse(1)
+
+@csrf_exempt
+@login_required(login_url='')
+def update_location_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	user = request.user
+	lon = request.POST['lon']
+	lat = request.POST['lat']
+	user.longitude = lon
+	user.latitude = lat
+	user.save()
+	return HttpResponse(1)

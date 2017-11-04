@@ -4,7 +4,6 @@
 
 {% block content %}
 	<div class="container">
-		
 		{% if messages %}
 		<div class="container">
 			{% for message in messages %}
@@ -16,9 +15,11 @@
 			{% endfor %}			
 		</div>
 		{% endif %}
-
+	
 		<div class="jumbotron">
-			Welcome, {{ user.get_full_name }} 
+			<a href="#" id="changedp"><img src="{{ user.profile_picture.url }}" alt="{{user.get_full_name}}" width="20%" height="20%"></a><br>
+			Click your profile picture to change it. <br>
+			<h3>{{ user.get_full_name }}</h3> 
 		</div>
 
 		<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a>
@@ -26,6 +27,30 @@
 
 		<form action="{% url 'logout_view' %}" method="POST">
 			<input class="btn btn-danger" type="submit" value="Logout">
+		</form>
+	</div>
+
+	<!-- handler for changing profile picture -->
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			document.getElementById("dialog").style.display = "";
+			$("#dialog").dialog({
+				autoOpen: false,
+			});
+
+			$("#changedp").click(function() {
+				$("#dialog").dialog( "open" );
+			});
+		});
+	</script>
+
+		<!-- dialog -->
+	<div id="dialog" style="display: none;" title="Upload profile picture">
+		<form action="" method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			<input type="file" name="image" accept="image/*"> <br>
+			<input type="submit" class="btn btn-primary" value="Upload!">
 		</form>
 	</div>
 {% endblock %}

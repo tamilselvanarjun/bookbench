@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 	url(r'^login/$', login_view, name='login_view'),
@@ -14,6 +16,10 @@ urlpatterns = [
 
     url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
     url(r'^api/update_review$', update_review_api, name='update_review_api'),
+    url(r'^api/update_location$', update_location_api, name='update_location_api'),
 
     url(r'^$', main_login_page, name='main_login_page'),
 ]
+
+if settings.DEBUG is True:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

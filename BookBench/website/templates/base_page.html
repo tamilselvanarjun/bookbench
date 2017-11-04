@@ -11,5 +11,23 @@
 <body>
 	{% block content %}
 	{% endblock %}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			/* location */
+			if(navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(data){
+					var lat = data.coords.latitude;
+					var lon = data.coords.longitude;
+					$.post("{% url 'update_location_api' %}", {
+						'lon' : lon,
+						'lat' : lat,
+					}, function(data) {
+						console.log(data);
+					});
+				});
+			}
+		});
+	</script>
 </body>
 </html>

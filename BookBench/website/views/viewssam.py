@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.urls import reverse
+from django.core.files.storage import FileSystemStorage
 
 from ..models import * # User, Book, Author, Publications, Genre, Review, Report, UserOwnedBook, UserWishList, Review_is_helpful
 from ..forms import *
@@ -64,13 +65,10 @@ def register_admin_view(request):
 	return render(request, 'register_special.html', {'admin_user_form':admin_user_form, 'registered':registered})
 
 
-
-
-
-
 # Define the home page
 def home_page(request):
 	# whatever request, just check if we are in
+	user = request.user
 	if request.method == "GET":
 		# check for user
 		user = request.user
@@ -81,4 +79,8 @@ def home_page(request):
 			messages.add_message(request, messages.ERROR, 'Login first')
 			return HttpResponseRedirect(reverse("main_login_page"))
 	else:
+		# check for image
+		img = request.FILES['image']
+		user.profile_picture = img
+		user.save()
 		return HttpResponseRedirect(reverse("main_login_page"))

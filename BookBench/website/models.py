@@ -63,11 +63,12 @@ class User(AbstractBaseUser):
 	# calculate sha256sum
 	# password = models.CharField(max_length=64)
 	longitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
-	langitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
+	latitude = models.DecimalField(default=-1, max_digits=13, decimal_places=10)
 	status = models.CharField(max_length=2, choices=USER_STATUS, default='US')
 
 	## Extra
 	preferred_genres = models.ManyToManyField("Genre")
+	profile_picture = models.ImageField(default='default.jpg')
 
 	USERNAME_FIELD = 'email'
 	EMAIL_FIELD = 'email'

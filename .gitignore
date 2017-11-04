@@ -3,3 +3,7 @@
 .idea/*
 *.pyc
 *.zip
+*.jpg
+*.png
+*.jpeg
+*.gif
