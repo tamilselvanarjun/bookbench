@@ -1,0 +1,79 @@
+{% extends "base_page.html" %}
+
+{% block title %}Advanced Search{% endblock %}
+
+{% block content %}
+	<div class="container">
+		
+		<!-- Define a nice little form here -->
+		<div class="jumbotron">
+			<br>
+			<br>
+			<h4>Advanced Search</h4>
+			<br>
+			<form id="searchform" action="" method="POST">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-11"><input type="text" style="width: 100%; border-radius: 5px;" id="query" name="query" placeholder="Enter your query here"></div>
+					<div class="col-sm-1"><button type="button" id="searchbutton"><i class="fa fa-search" aria-hidden="true"></i></button></div>
+				</div>
+
+				<h5>Search parameters</h5>
+				<select multiple="multiple" name="parameters" id="parameters">
+					<option value="name">Name</option>
+					<option value="publications">Publications</option>
+					<option value="genres">Genres</option>
+					<option value="authors">Authors</option>
+					<option value="isbn">ISBN</option>
+					<option value="description">Description</option>
+				</select>
+
+			</form>
+		</div>
+
+		{% if results %} 
+		<h4>Search results</h4> 
+			{% if books.count %}
+				{% for book in books %}
+				<div class="jumbotron">
+					<h4>{{book.name|capfirst}}</h4>
+					<b>ISBN:</b> {{book.ISBN}} <br>
+					<b>Description:</b> {{book.description|capfirst}} <br>
+			
+					<b>Authors:</b> {% for author in book.authors.all %} <a href="#" class="text-success">{{author.name}}</a> {% endfor %} <br>
+					<b>Genres:</b> {% for genre in book.genres.all %} <a href="#" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+					<b>Publication:</b> <a href="#" class="text-success">{{book.publication.name}}</a> <br>
+				</div>
+				{% endfor %}
+				{# Here the book thingy ends #}
+			{% else %} <p>No results to show.</p>
+			{% endif %}
+		{% endif %}
+		
+
+	</div>
+	{# <!-- End here --> #}
+	
+	<script type='text/javascript'>	
+		$(document).ready(function() {
+			$("#parameters").multiselect();
+			
+			$("#searchbutton").click(function() {
+				var selected = $("#parameters option:selected");
+				if($("#query").val().length > 0) {
+					if(selected.length > 0) {
+						$("#searchform").submit();
+					}
+					else {
+						alert("Please select at least one parameter.");
+					}
+				}
+				else {
+					alert("Please enter some text.");
+				}
+			});	
+
+		});
+	</script>
+
+{% endblock %}

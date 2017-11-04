@@ -62,7 +62,6 @@ def preferred_genres(request):
 				'user' : user,
 				'genres' : genres,
 			})
-
 	# process the form
 	else:
 		genre_list = request.POST.getlist('genres')
@@ -74,3 +73,45 @@ def preferred_genres(request):
 		messages.add_message(request, messages.SUCCESS, 'Preferences updated!')
 		return HttpResponseRedirect(reverse("home_page"))
 
+## TODO
+@login_required(login_url='')
+def advanced_search(request):
+	user = request.user
+	if request.method == "GET":
+		return render(request, '../templates/advanced_search.html', {
+				'user': user
+		})
+	else:
+		qs = Book.objects.none()
+		query = request.POST.get('query')
+		params = request.POST.getlist('parameters')
+		print(query, params)
+		if "name" in params:
+			print(params)
+			qs = qs | (Book.objects.filter(name__icontains=query))
+		if "isbn" in params:
+			print(params)
+			qs = qs | (Book.objects.filter(ISBN__icontains=query))
+		if "description" in params:
+			print(params)
+			qs = qs | (Book.objects.filter(description__icontains=query))
+		if "publications" in params:
+			print(params)
+			pub = Publications.objects.filter(name__icontains=query)
+			qs = qs | (Book.objects.filter(publication__in=pub))
+		if "genres" in params:
+			print(params)
+			genres = Genre.objects.filter(name__icontains=query)
+			qs = qs | Book.objects.filter(genres__in=genres)
+		if "authors" in params:
+			print(params)
+			authors = Author.objects.filter(name__icontains=query)
+			qs = qs | (Book.objects.filter(authors__in=authors))
+
+		context = {
+			'user': user,
+			'books': qs.distinct(),
+			'results': True,
+		}
+		print(context)
+		return render(request, '../templates/advanced_search.html', context)

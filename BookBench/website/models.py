@@ -100,15 +100,24 @@ class Author(models.Model):
 	ID = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
 
+	def __str__(self):
+		return self.name
+
 
 class Publications(models.Model):
 	ID = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
 
+	def __str__(self):
+		return self.name
+
 
 class Genre(models.Model):
 	ID = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.name
 
 
 class Review(models.Model):

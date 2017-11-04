@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^register/$', register_view, name='register'),
     url(r'^registeradmin/$', register_admin_view, name='register_admin_view'),
     url(r'^prefgenres/$', preferred_genres, name='preferred_genres'),
+    url(r'^search/$', advanced_search, name='advanced_search'),
     url(r'^$', main_login_page, name='main_login_page'),
 ]
