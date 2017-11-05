@@ -28,3 +28,23 @@ class UserLoginForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ['email', 'password']
+
+class AddBooksForm(forms.ModelForm):
+	class Meta:
+		model = Book
+		fields = ['ISBN', 'name', 'description', 'authors', 'genres', 'publication']
+
+class AddAuthorsForm(forms.ModelForm):
+	class Meta:
+		model = Author
+		fields = ['name']
+
+class AddPublicationsForm(forms.ModelForm):
+	class Meta:
+		model = Publications
+		fields = ['name']
+
+class AddGenresForm(forms.ModelForm):
+	class Meta:
+		model = Genre
+		fields = ['name']

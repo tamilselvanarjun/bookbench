@@ -38,21 +38,6 @@ def main_login_page(request):
 			return HttpResponseRedirect(reverse(("main_login_page")))
 
 
-# # Define the home page
-# def home_page(request):
-# 	# whatever request, just check if we are in
-# 	if request.method == "GET":
-# 		# check for user
-# 		user = request.user
-# 		if user.is_authenticated():
-# 			# user is authenticated, show stuff here
-# 			return render(request, '../templates/homepage.html', {'user': user})
-# 		else:
-# 			messages.add_message(request, messages.ERROR, 'Login first')
-# 			return HttpResponseRedirect(reverse("main_login_page"))
-# 	else:
-# 		return HttpResponseRedirect(reverse("main_login_page"))
-
 @login_required(login_url='')
 def preferred_genres(request):
 
@@ -255,3 +240,5 @@ def update_review_helpful_api(request):
 		count = 0
 
 	return HttpResponse(count)
+
+

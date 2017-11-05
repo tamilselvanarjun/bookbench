@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.shortcuts import render
@@ -50,7 +51,6 @@ def register_admin_view(request):
 		if admin_user_form.is_valid():
 			admin_user = admin_user_form.save()
 			admin_user.set_password(admin_user.password)
-			admin_user.set_status(admin_user.status)
 			admin_user.save()
 
 			registered = True
@@ -84,3 +84,59 @@ def home_page(request):
 		user.profile_picture = img
 		user.save()
 		return HttpResponseRedirect(reverse("main_login_page"))
+
+
+@login_required(login_url='')
+def add_books(request):
+	if request.method == "GET":
+		add_books_form = AddBooksForm()
+		return render(request, '../templates/add_books.html', {'add_books_form':add_books_form})
+	else:
+		add_books_form = AddBooksForm(data=request.POST)
+		add_books = add_books_form.save()
+		add_books.save()
+		messages.add_message(request, messages.ERROR, 'Successfully Added new Book!')
+		return HttpResponseRedirect(reverse("add_books"))
+
+
+
+@login_required(login_url='')
+def add_publications(request):
+	if request.method == "GET":
+		add_publications_form = AddPublicationsForm()
+		return render(request, '../templates/add_books.html', {'add_publications_form':add_publications_form})
+	else:
+		add_publications_form = AddPublicationsForm(data=request.POST)
+		add_publications = add_publications_form.save()
+		add_publications.save()
+		messages.add_message(request, messages.ERROR, 'Successfully Added new Publication!')
+		return HttpResponseRedirect(reverse("add_publications"))
+
+
+
+@login_required(login_url='')
+def add_authors(request):
+	
+	if request.method == "GET":
+		add_authors_form = AddAuthorsForm()
+		return render(request, '../templates/add_books.html', {'add_authors_form':add_authors_form})
+	else:
+		add_authors_form = AddAuthorsForm(data=request.POST)
+		add_authors = add_authors_form.save()
+		add_authors.save()
+		messages.add_message(request, messages.ERROR, 'Successfully Added new Author!')
+		return HttpResponseRedirect(reverse("add_authors"))
+
+
+@login_required(login_url='')
+def add_genres(request):
+	
+	if request.method == "GET":
+		add_genres_form = AddGenresForm()
+		return render(request, '../templates/add_books.html', {'add_genres_form':add_genres_form})
+	else:
+		add_genres_form = AddGenresForm(data=request.POST)
+		add_genres = add_genres_form.save()
+		add_genres.save()
+		messages.add_message(request, messages.ERROR, 'Successfully Added new Genre!')
+		return HttpResponseRedirect(reverse("add_genres"))

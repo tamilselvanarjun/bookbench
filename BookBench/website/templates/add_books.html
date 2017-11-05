@@ -1,0 +1,50 @@
+{% extends "base_page.html" %}
+
+{% block title %}Welcome to BookBench{% endblock %}
+
+{% block content %}
+{# messages #}
+{% if messages %}
+	{% for message in messages %}
+		{% if 'error' in message.tags %}
+		<p class="text-danger">{{message}}</p>
+		{% elif 'success' in message.tags %}
+		<p class="text-success">{{message}}</p>
+		{% endif %}							
+	{% endfor %}
+{% endif %}
+	
+
+
+    {% if add_books_form %}
+		<form id="add_books_form" method="post" action="/add_books/"
+		enctype="multipart/form-data">
+    	{% csrf_token %}
+		{{ add_books_form.as_p }}
+			<input type="submit" name="submit" value="Add Book" />
+		</form>
+    {% elif add_publications_form %}
+    <form id="add_books_form" method="post" action="/add_publications/"
+		enctype="multipart/form-data">
+    	{% csrf_token %}
+    	{{ add_publications_form.as_p }}
+    		<input type="submit" name="submit" value="Add Publications" />
+		</form>
+    {% elif add_authors_form %}
+    <form id="add_books_form" method="post" action="/add_authors/"
+		enctype="multipart/form-data">
+    	{% csrf_token %}
+    	{{ add_authors_form.as_p }}
+    		<input type="submit" name="submit" value="Add Authors" />
+		</form>
+    {% elif add_genres_form %}
+    <form id="add_books_form" method="post" action="/add_genres/"
+		enctype="multipart/form-data">
+    	{% csrf_token %}
+    	{{ add_genres_form.as_p }}
+    		<input type="submit" name="submit" value="Add Genres" />
+		</form>
+	
+	{% endif %}
+    	
+{% endblock %}
