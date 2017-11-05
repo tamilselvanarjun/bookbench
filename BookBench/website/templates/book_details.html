@@ -8,6 +8,7 @@
 		{# All details of the book #}
 		<h4>Book Details:</h4>
 		<div class="jumbotron">
+			<img src="{{ book.picture.url }}" alt="{{book.name|capfirst}}" width="25%" height="25%"> <br>
 			<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
 			<b>ISBN:</b> {{book.ISBN}} <br>
 			<b>Description:</b> {{book.description|capfirst}} <br>
@@ -37,6 +38,7 @@
 		<div class="">
 			<h4>All Reviews</h4>
 			{% if reviews %}
+				{# check for some review #}
 				{% for review in reviews %}
 					<div class="jumbotron">
 						<b>Reviewed by:</b> {{review.review_user.get_full_name|capfirst}} <br>
@@ -45,6 +47,26 @@
 						<b>Description:</b> {{review.text}} <br>
 						{% endif %}
 						<input type="number" id="{{review.ID}}" class="rating" data-size="xs" value="{{review.rating}}" disabled="disabled" data-step="1">
+
+						{# check if I'm the one who's reviewed it #}
+						{% ifequal user review.review_user %}
+							You reviewed it.
+						{% else %}
+							<b>Was this review helpful?</b>
+							{# select option if already exists #}
+							<select name="{{review.ID}}" id="{{review.ID}}" class="review_helpful">
+								<option value="yes">Yes</option>
+								<option value="no">No</option>
+								<option value="none" selected="selected">None</option>
+							</select> <br>
+							{# number of people finding it useful #}
+							<span id="{{review.ID}}tip">
+							<!-- {% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
+							{% else %} {{review.helpful}} people found it helpful.
+							{% endifequal %} -->
+							</span>
+						{% endifequal %}
+
 					</div>
 				{% endfor %}
 			{% else %}
@@ -58,6 +80,27 @@
 	<!-- script -->
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$(".review_helpful").multiselect();
+			$(".review_helpful").on('change', function(e) {
+				var reviewID = $(this).attr('id');
+				console.log(reviewID);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+				// send request now
+				$.post("{% url 'update_review_helpful_api' %}", {
+					'reviewID': reviewID,
+					'response': valueSelected,
+				}, function(data) {
+					console.log(data);
+					if(data != "1")	
+						$("#"+reviewID+"tip").text(data + " people found it helpful.");
+					else
+						$("#"+reviewID+"tip").text(data + " person found it helpful.");
+				});
+			});
+
+
 			$("#my_rating").rating({step: 1}).on("rating:change", function(event, value, caption) {
 				console.log(value);
 				if(value<1) {

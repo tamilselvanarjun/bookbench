@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.urls import reverse
-from django.db.models import Avg
+from django.db.models import Avg, Sum, Count, When, Case, Value, IntegerField
+from django.db.models.functions import Coalesce
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from ..forms import *
 import json
 
@@ -86,7 +88,9 @@ def advanced_search(request):
 	else:
 		qs = Book.objects.none()
 		query = request.POST.get('query')
+		sortCondition = request.POST.get("sortCondition")
 		params = request.POST.getlist('parameters')
+
 		print(query, params)
 		if "name" in params:
 			print(params)
@@ -110,9 +114,17 @@ def advanced_search(request):
 			authors = Author.objects.filter(name__icontains=query)
 			qs = qs | (Book.objects.filter(authors__in=authors))
 
+		# order the books
+		if "name" == sortCondition:
+			qs = qs.order_by('name')
+		else:
+			qs = qs.annotate(score=Coalesce(Sum('review__rating'), 0)).order_by('-score')
+
+		qs = qs.distinct()
+
 		context = {
 			'user': user,
-			'books': qs.distinct(),
+			'books': qs,
 			'results': True,
 		}
 		print(context)
@@ -126,6 +138,9 @@ def book_details(request, ISBN):
 	ctx = {'user': user, 'book': book}
 	# get the average rating
 	reviews = Review.objects.filter(review_book=book)
+	# reviews = reviews.annotate(helpful=Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
+				# output_field=IntegerField()))
+	# reviews = reviews.annotate(my_help)
 	if(reviews.count() > 0):
 		ctx['avg_rating'] = reviews.aggregate(Avg("rating"))["rating__avg"]
 		ctx['reviews'] = reviews
@@ -201,3 +216,42 @@ def update_location_api(request):
 	user.latitude = lat
 	user.save()
 	return HttpResponse(1)
+
+# update the reviews
+@csrf_exempt
+@login_required(login_url='')
+def update_review_helpful_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	user = request.user
+	reviewID = request.POST['reviewID']
+	response = request.POST['response']
+	review = Review.objects.get(ID=reviewID)
+
+	try:
+		helpful = Review_is_helpful.objects.get(review_user=user, on_review=review)
+		if response == "none":
+			helpful.delete()
+		else:
+			if response == "yes":
+				helpful.is_helpful = True
+			else:
+				helpful.is_helpful = False
+			helpful.save()
+	except:
+		if response != "none":
+			# make a new one
+			helpful = Review_is_helpful.objects.create(review_user=user, on_review=review,is_helpful=False)
+			if response == "yes":
+				helpful.is_helpful = True
+			else:
+				helpful.is_helpful = False
+			helpful.save()
+
+	count = review.review_is_helpful_set.annotate(helpful=\
+				Case(When(is_helpful=True, then=Value(1)), default=Value(0), \
+				output_field=IntegerField())).aggregate(Sum('helpful'))['helpful__sum']
+	if count is None:
+		count = 0
+
+	return HttpResponse(count)

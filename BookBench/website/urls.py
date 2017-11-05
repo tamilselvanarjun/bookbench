@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
     url(r'^api/update_review$', update_review_api, name='update_review_api'),
     url(r'^api/update_location$', update_location_api, name='update_location_api'),
+    url(r'^api/update_review_helpful$', update_review_helpful_api, name='update_review_helpful_api'),
 
     url(r'^$', main_login_page, name='main_login_page'),
 ]

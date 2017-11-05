@@ -18,22 +18,38 @@
 					<div class="col-sm-1"><button type="button" id="searchbutton"><i class="fa fa-search" aria-hidden="true"></i></button></div>
 				</div>
 
-				<h5>Search parameters</h5>
-				<select multiple="multiple" name="parameters" id="parameters">
-					<option value="name">Name</option>
-					<option value="publications">Publications</option>
-					<option value="genres">Genres</option>
-					<option value="authors">Authors</option>
-					<option value="isbn">ISBN</option>
-					<option value="description">Description</option>
-				</select>
+				<div class="row">
+					<div class="col-sm-4">
+						<h5>Search by</h5>
+						<select multiple="multiple" name="parameters" id="parameters">
+							<option value="name">Name</option>
+							<option value="publications">Publications</option>
+							<option value="genres">Genres</option>
+							<option value="authors">Authors</option>
+							<option value="isbn">ISBN</option>
+							<option value="description">Description</option>
+						</select>
+					</div>
+					<div class="col-sm-4">
+						<h5>Sort by</h5>
+						<select name="sortCondition" id="sortCondition">
+							<option value="name" selected="selected">Name</option>
+							<option value="popularity">Popularity</option>
+						</select>
+					</div>
+					<div class="col-sm-4">
+						
+					</div>
+				</div>
+
+				
 
 			</form>
 		</div>
 
 		{% if results %} 
 		<h4>Search results</h4> 
-			{% if books.count %}
+			{% if books %}
 				{% for book in books %}
 				<div class="jumbotron">
 					<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
@@ -57,6 +73,7 @@
 	<script type='text/javascript'>	
 		$(document).ready(function() {
 			$("#parameters").multiselect();
+			$("#sortCondition").multiselect();
 			
 			$("#searchbutton").click(function() {
 				var selected = $("#parameters option:selected");

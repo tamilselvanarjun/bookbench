@@ -96,6 +96,9 @@ class Book(models.Model):
 	genres = models.ManyToManyField("Genre")
 	publication = models.ForeignKey("Publications", on_delete=models.CASCADE)
 
+	# extra
+	picture = models.ImageField(default='bookdefault.png')
+
 
 class Author(models.Model):
 	ID = models.AutoField(primary_key=True)
