@@ -138,8 +138,8 @@ def book_details(request, ISBN):
 	ctx = {'user': user, 'book': book}
 	# get the average rating
 	reviews = Review.objects.filter(review_book=book)
-	# reviews = reviews.annotate(helpful=Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
-				# output_field=IntegerField()))
+	reviews = reviews.annotate(helpful=Sum(Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
+				output_field=IntegerField())))
 	# reviews = reviews.annotate(my_help)
 	if(reviews.count() > 0):
 		ctx['avg_rating'] = reviews.aggregate(Avg("rating"))["rating__avg"]

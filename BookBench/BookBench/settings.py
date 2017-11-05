@@ -26,7 +26,7 @@ SECRET_KEY = 'fs19p&o7hw01&u3#gg4$hia-m-(abx3lz%7u6gs!g0+dhane*r'
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+LOGIN_URL = '/'
 
 # Application definition
 

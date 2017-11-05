@@ -50,7 +50,7 @@
 
 						{# check if I'm the one who's reviewed it #}
 						{% ifequal user review.review_user %}
-							You reviewed it.
+							You cannot rate your own review as helpful. <br>
 						{% else %}
 							<b>Was this review helpful?</b>
 							{# select option if already exists #}
@@ -60,13 +60,12 @@
 								<option value="none" selected="selected">None</option>
 							</select> <br>
 							{# number of people finding it useful #}
-							<span id="{{review.ID}}tip">
-							<!-- {% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
-							{% else %} {{review.helpful}} people found it helpful.
-							{% endifequal %} -->
-							</span>
 						{% endifequal %}
-
+						<span id="{{review.ID}}tip">
+						{% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
+						{% else %} {{review.helpful}} people found it helpful.
+						{% endifequal %}
+						</span>
 					</div>
 				{% endfor %}
 			{% else %}
