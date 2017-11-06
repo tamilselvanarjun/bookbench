@@ -3,24 +3,23 @@
 {% block title %}Welcome to BookBench{% endblock %}
 
 {% block content %}
-{# messages #}
-{% if messages %}
-	{% for message in messages %}
-		{% if 'error' in message.tags %}
-		<p class="text-danger">{{message}}</p>
-		{% elif 'success' in message.tags %}
-		<p class="text-success">{{message}}</p>
-		{% endif %}							
-	{% endfor %}
-{% endif %}
+	{# messages #}
+	{% if messages %}
+		{% for message in messages %}
+			{% if 'error' in message.tags %}
+			<p class="text-danger">{{message}}</p>
+			{% elif 'success' in message.tags %}
+			<p class="text-success">{{message}}</p>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
 	
-
 
     {% if add_books_form %}
 		<form id="add_books_form" method="post" action="/add_books/"
 		enctype="multipart/form-data">
     	{% csrf_token %}
-		{{ add_books_form.as_p }}
+			{{ add_books_form.as_p }}
 			<input type="submit" name="submit" value="Add Book" />
 		</form>
     {% elif add_publications_form %}
