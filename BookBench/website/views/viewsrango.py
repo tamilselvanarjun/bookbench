@@ -242,3 +242,5 @@ def update_review_helpful_api(request):
 	return HttpResponse(count)
 
 
+
+
