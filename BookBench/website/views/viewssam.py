@@ -140,3 +140,67 @@ def add_genres(request):
 		add_genres.save()
 		messages.add_message(request, messages.ERROR, 'Successfully Added new Genre!')
 		return HttpResponseRedirect(reverse("add_genres"))
+
+@login_required(login_url='')
+def add_moderators(request):
+	user = request.user
+	if request.method == "GET":
+		return render(request, '../templates/add_moderators.html', {
+				'user': user
+		})
+	else:
+		user_list = User.objects.none()
+		query = request.POST.get('query')
+		params = request.POST.getlist('parameters')
+
+		print(query, params)
+		search_query = query.split()
+		if "name" in params:
+			print(params)
+			for ind_query in search_query:
+				user_list = user_list | (User.objects.filter(first_name__icontains=ind_query))
+				user_list = user_list | (User.objects.filter(last_name__icontains=ind_query))
+		if "email" in params:
+			print(params)
+			for ind_query in search_query:
+				user_list = user_list | (User.objects.filter(email__icontains=ind_query))
+
+		user_list = user_list.distinct()
+
+		context = {
+			'user': user,
+			'user_list': user_list,
+			'results': True,
+		}
+
+		print(context)
+		return render(request, '../templates/add_moderators.html', context)
+
+
+# toggle the user status
+@csrf_exempt
+@login_required(login_url='')
+def mod_toggle_api(request):
+	if request.method != "POST":
+		return HttpResponse(-1)
+	
+	user = request.user
+	uID = request.POST['uID']
+	target = request.POST['response']
+	user_target = User.objects.get(ID=uID)
+	count = -1
+
+	if user_target.status == 'MO' and target == 'normie':
+		print "moderator is changing"
+		user_target.status = 'US'
+		count = 0
+	elif user_target.status == 'US' and target == 'mod':
+		print "user is changing"
+		user_target.status = 'MO'
+		count = 1
+	else:
+		count = 2
+
+	user_target.save()
+
+	return HttpResponse(count)

@@ -23,8 +23,8 @@
 					<b>Review Text:</b>{{report.on_review.text}}<br>
 					<b>Reviewed By : </b>{{report.on_review.review_user.get_full_name}}<br>
 					<b>Reported By: </b>{{reprt.report_user.get_full_name}}<br>
-					<button type = "submit" class = "remove_report" value = "{{report.ID}}" id="{{report.ID}}">Remove Report</button>
-					<button type = "submit" class = "delete_review" value = "{{report.ID}}" id = "{{report.on_review.ID}}">Delete Review</button> 	
+					<button type = "submit" class = "remove_report" id="{{report.ID}}">Remove Report</button>
+					<button type = "submit" class = "delete_review" value="{{report.ID}}" id = "{{report.on_review.ID}}">Delete Review</button> 	
 				</div>
 				{% endfor %}
 			{% else %} <p>No results to show.</p>
@@ -47,16 +47,15 @@
 			});
 
 			$(".delete_review").click(function() {
-				var report_id = $(this).value;
+				// var report_id = $(this).val();
+				var report_id = $(this).val();
+				var parent = $(this).parent();
 				var review_id = $(this).attr('id');
-				$.post("{% url 'delete_report_api' %}", {
-					'reportID': report_id,
-				}, function(data) {
-					console.log(data);
-					$("#div_"+report_id).hide();
-				});	
+				// alert(report_id);
+				// alert(review_id);
 				$.post("{% url 'delete_review_api' %}", { 'reviewID' : review_id}, function(data){
 					console.log(data);
+					parent.hide();
 				});
 			});	
 		});

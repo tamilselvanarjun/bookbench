@@ -13,9 +13,9 @@
 			<b>ISBN:</b> {{book.ISBN}} <br>
 			<b>Description:</b> {{book.description|capfirst}} <br>
 		
-			<b>Authors:</b> {% for author in book.authors.all %} <a href="" class="text-success">{{author.name}}</a> {% endfor %} <br>
-			<b>Genres:</b> {% for genre in book.genres.all %} <a href="" class="text-success">{{genre.name}}</a> {% endfor %} <br>
-			<b>Publication:</b> <a href="" class="text-success">{{book.publication.name}}</a> <br>
+			<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+			<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+			<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
 			<input type="number" id="avg_rating" class="rating" data-size="xs" value="{{avg_rating}}" disabled="disabled" data-step="0.1">
 		</div>
 

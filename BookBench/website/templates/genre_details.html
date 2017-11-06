@@ -1,0 +1,48 @@
+{% extends "base_page.html" %}
+
+{% block title %}Welcome to BookBench{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<h4>Genre details</h4>
+		<div class="jumbotron">
+			<b>Name:</b> {{genre.name}}
+		</div>
+
+		<h4>Books of this genre</h4>
+			{% if books %}
+				{% for book in books %}
+				<div class="jumbotron">
+					<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+					<b>ISBN:</b> {{book.ISBN}} <br>
+					<b>Description:</b> {{book.description|capfirst}} <br>
+				
+					<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+					<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+					<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+				</div>
+				{% endfor %}
+				
+				{# pagination #}
+				<div class="pagination">
+				    <span class="step-links">
+				        {% if books.has_previous %}
+				            <a href="?page={{ books.previous_page_number }}" class="btn btn-primary">Previous</a>
+				        {% endif %}
+
+				        <span class="current">
+				            Page {{ books.number }} of {{ books.paginator.num_pages }}.
+				        </span>
+
+				        {% if books.has_next %}
+				            <a href="?page={{ books.next_page_number }}" class="btn btn-primary">Next</a>
+				        {% endif %}
+				    </span>
+				</div>
+
+			{% else %}
+				<p>No books in this genre.</p>
+			{% endif %}
+
+	</div>
+{% endblock %}

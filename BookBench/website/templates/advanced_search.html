@@ -3,6 +3,7 @@
 {% block title %}Advanced Search{% endblock %}
 
 {% block content %}
+	{% load mytags %}
 	<div class="container">
 		
 		<!-- Define a nice little form here -->
@@ -11,9 +12,9 @@
 			<br>
 			<h4>Advanced Search</h4>
 			<br>
-			<form id="searchform" action="" method="POST">
-				{% csrf_token %}
+			<form id="searchform" action="" method="GET">
 				<div class="row">
+					<input type="hidden" name="search" value="search">
 					<div class="col-sm-11"><input type="text" style="width: 100%; border-radius: 5px;" id="query" name="query" placeholder="Enter your query here"></div>
 					<div class="col-sm-1"><button type="button" id="searchbutton"><i class="fa fa-search" aria-hidden="true"></i></button></div>
 				</div>
@@ -42,26 +43,43 @@
 					</div>
 				</div>
 
-				
+
 
 			</form>
 		</div>
 
-		{% if results %} 
+		{% if results %}
 		<h4>Search results</h4> 
 			{% if books %}
 				{% for book in books %}
 				<div class="jumbotron">
 					<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+					<b>Score:</b> {{book.score}} <br>
 					<b>ISBN:</b> {{book.ISBN}} <br>
 					<b>Description:</b> {{book.description|capfirst}} <br>
-			
-					<b>Authors:</b> {% for author in book.authors.all %} <a href="#" class="text-success">{{author.name}}</a> {% endfor %} <br>
-					<b>Genres:</b> {% for genre in book.genres.all %} <a href="#" class="text-success">{{genre.name}}</a> {% endfor %} <br>
-					<b>Publication:</b> <a href="#" class="text-success">{{book.publication.name}}</a> <br>
+
+					<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+					<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+					<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
 				</div>
 				{% endfor %}
 				{# Here the book thingy ends #}
+				<div class="pagination text-center container">
+				    <span class="step-links">
+				        {% if books.has_previous %}
+				            <a href="?{% url_replace request 'page' books.previous_page_number %}" class="btn btn-primary">Previous</a>
+				        {% endif %}
+
+				        <span class="current">
+				            &nbsp;&nbsp;&nbsp;&nbsp;Page {{ books.number }} of {{ books.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+				        </span>
+
+				        {% if books.has_next %}
+				            <a href="?{% url_replace request 'page' books.next_page_number %}" class="btn btn-primary">Next</a>
+				        {% endif %}
+				    </span>
+				</div>
+
 			{% else %} <p>No results to show.</p>
 			{% endif %}
 		{% endif %}
@@ -88,7 +106,7 @@
 				else {
 					alert("Please enter some text.");
 				}
-			});	
+			});
 
 		});
 	</script>
