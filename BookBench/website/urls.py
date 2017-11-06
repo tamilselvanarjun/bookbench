@@ -19,9 +19,14 @@ urlpatterns = [
     url(r'^add_moderators/$', add_moderators, name = 'add_moderators'),
     
     url(r'^prefgenres/$', preferred_genres, name='preferred_genres'),
-    url(r'^search/$', advanced_search, name='advanced_search'),
+    url(r'^search/', advanced_search, name='advanced_search'),
     url(r'^book/(?P<ISBN>[a-zA-Z0-9\-]+)$', book_details, name='book_details'),
-    
+
+    # details of per genre/author/publication
+    url(r'^genre/(?P<ID>[a-zA-z0-9\-]+)', genre_details, name='genre_details'),
+    url(r'^author/(?P<ID>[a-zA-z0-9\-]+)', author_details, name='author_details'),
+    url(r'^publication/(?P<ID>[a-zA-z0-9\-]+)', publication_details, name='publication_details'),
+
     url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
     url(r'^api/update_review$', update_review_api, name='update_review_api'),
     url(r'^api/update_location$', update_location_api, name='update_location_api'),
