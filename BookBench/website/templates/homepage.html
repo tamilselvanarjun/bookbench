@@ -30,6 +30,10 @@
 			<a href="{% url 'add_authors' %}" class="btn btn-primary">Add new authors!</a><br> <br>
 			<a href="{% url 'add_genres' %}" class="btn btn-primary">Add new genres!</a><br> <br>
 		{% endif %}
+		{% if request.user.status == 'MO' %}
+			<b>Hey Moderator!</b><br><br>
+			<a href="{% url 'check_report' %}" class="btn btn-primary">Check Reports!</a><br> <br>
+		{% endif %}
 		<br><br>
 		<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a>
 		<a href="{% url 'advanced_search' %}" class="btn btn-success">Search books</a>

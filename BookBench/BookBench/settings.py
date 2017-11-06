@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -87,7 +88,7 @@ DATABASES = {
 		'NAME'		: 'backend',
 		'USER'		: 'rohitrango',
 		'PASSWORD'	: '',
-		'HOST'		: 'localhost',
+		'HOST'		: '192.168.0.102',
 		'PORT'		: 5610,
 	}
 }

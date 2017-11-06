@@ -1,12 +1,12 @@
 from django.conf.urls import url
-from views import *
+from .views import *
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-	url(r'^login/$', login_view, name='login_view'),
-	url(r'^home/$', home_page, name='home_page'),
-	url(r'^logout/$', logout_view, name='logout_view'),
+    url(r'^login/$', login_view, name='login_view'),
+    url(r'^home/$', home_page, name='home_page'),
+    url(r'^logout/$', logout_view, name='logout_view'),
     # url(r'^projectbackend/', admin.site.urls),
     url(r'^register/$', register_view, name='register'),
     url(r'^add_books/$', add_books, name='add_books'),
@@ -23,6 +23,10 @@ urlpatterns = [
     url(r'^api/update_location$', update_location_api, name='update_location_api'),
     url(r'^api/update_review_helpful$', update_review_helpful_api, name='update_review_helpful_api'),
 
+    url(r'^check_report/$', check_report_view, name = 'check_report'),
+    url(r'^delete_review/$', delete_review_api, name = 'delete_review_api'),
+    url(r'^delete_report/$', delete_report_api, name = 'delete_report_api'),
+    
     url(r'^$', main_login_page, name='main_login_page'),
 ]
 
