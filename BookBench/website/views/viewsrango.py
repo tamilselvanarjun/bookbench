@@ -66,15 +66,20 @@ def preferred_genres(request):
 @login_required(login_url='')
 def advanced_search(request):
 	user = request.user
-	if request.method == "GET":
+
+	if request.method!="GET":
+		return HttpResponseRedirect(reverse("home_page"))
+
+	# check if we actually searched
+	if request.GET.get('search') is None:
 		return render(request, '../templates/advanced_search.html', {
 				'user': user
 		})
 	else:
 		qs = Book.objects.none()
-		query = request.POST.get('query')
-		sortCondition = request.POST.get("sortCondition")
-		params = request.POST.getlist('parameters')
+		query = request.GET.get('query')
+		sortCondition = request.GET.get("sortCondition")
+		params = request.GET.getlist('parameters')
 
 		print(query, params)
 		if "name" in params:
@@ -99,13 +104,26 @@ def advanced_search(request):
 			authors = Author.objects.filter(name__icontains=query)
 			qs = qs | (Book.objects.filter(authors__in=authors))
 
+		qs = qs.annotate(score=Coalesce(Sum('review__rating'), 0))
 		# order the books
 		if "name" == sortCondition:
 			qs = qs.order_by('name')
 		else:
-			qs = qs.annotate(score=Coalesce(Sum('review__rating'), 0)).order_by('-score')
-
+			qs = qs.order_by('-score')
 		qs = qs.distinct()
+
+		# pagination
+		paginator = Paginator(qs, 10)
+		page = request.GET.get('page')
+		print("Page: ", page)
+		try:
+			qs = paginator.page(page)
+		except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+			qs = paginator.page(1)
+		except EmptyPage:
+			# If page is out of range (e.g. 9999), deliver last page of results.
+			qs = paginator.page(paginator.num_pages)
 
 		context = {
 			'user': user,
@@ -242,3 +260,73 @@ def update_review_helpful_api(request):
 	return HttpResponse(count)
 
 
+@login_required
+def genre_details(request, ID):
+	if request.method!="GET":
+		return HttpResponseRedirect(reverse('home_page'))
+	else:
+		page = request.GET.get('page')
+		genre = Genre.objects.get(ID=ID)
+		books = genre.book_set.all()
+		paginator = Paginator(books, 10)
+		try: 
+			b = paginator.page(page)
+		except PageNotAnInteger:
+			b = paginator.page(1)
+		except EmptyPage:
+			b = paginator.page(paginator.num_pages)
+
+		ctx = {
+			'genre': genre,
+			'books': b,
+		}
+
+		return render(request, '../templates/genre_details.html', ctx)
+
+
+@login_required
+def author_details(request, ID):
+	if request.method!="GET":
+		return HttpResponseRedirect(reverse('home_page'))
+	else:
+		page = request.GET.get('page')
+		author = Author.objects.get(ID=ID)
+		books = author.book_set.all()
+		paginator = Paginator(books, 10)
+		try: 
+			b = paginator.page(page)
+		except PageNotAnInteger:
+			b = paginator.page(1)
+		except EmptyPage:
+			b = paginator.page(paginator.num_pages)
+
+		ctx = {
+			'author': author,
+			'books': b,
+		}
+
+		return render(request, '../templates/author_details.html', ctx)
+
+
+@login_required
+def publication_details(request, ID):
+	if request.method!="GET":
+		return HttpResponseRedirect(reverse('home_page'))
+	else:
+		page = request.GET.get('page')
+		publ = Publications.objects.get(ID=ID)
+		books = publ.book_set.all()
+		paginator = Paginator(books, 10)
+		try: 
+			b = paginator.page(page)
+		except PageNotAnInteger:
+			b = paginator.page(1)
+		except EmptyPage:
+			b = paginator.page(paginator.num_pages)
+
+		ctx = {
+			'pub': publ,
+			'books': b,
+		}
+
+		return render(request, '../templates/publication_details.html', ctx)
