@@ -330,3 +330,18 @@ def publication_details(request, ID):
 		}
 
 		return render(request, '../templates/publication_details.html', ctx)
+
+# get all users who have this book
+@login_required
+def userbook(request, ISBN):
+	user = request.user
+	book = Book.objects.get(ISBN=ISBN)
+	userbooks = book.userownedbook_set.all()
+
+	ctx = {
+		'user': user,
+		'book': book,
+		'userbooks': userbooks,
+	}
+
+	return render(request, '../templates/user_book.html', ctx)

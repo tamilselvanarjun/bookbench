@@ -19,7 +19,8 @@
 		<div class="jumbotron">
 			<a href="#" id="changedp"><img src="{{ user.profile_picture.url }}" alt="{{user.get_full_name}}" width="20%" height="20%"></a><br>
 			Click your profile picture to change it. <br>
-			<h3>{{ user.get_full_name }}</h3> 
+			<h3>{{ user.get_full_name }}</h3>
+			<p class="text-warning">{{user.get_status_display}}</p>
 		</div>
 		
 		{# all the buttons are here for now #}
@@ -59,7 +60,7 @@
 	<div id="dialog" style="display: none;" title="Upload profile picture">
 		<form action="" method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
-			<input type="file" name="image" accept="image/*"> <br>
+			<input type="file" name="image" accept="image/*" required="required"> <br>
 			<input type="submit" class="btn btn-primary" value="Upload!">
 		</form>
 	</div>

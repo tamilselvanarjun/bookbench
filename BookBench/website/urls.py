@@ -23,6 +23,9 @@ urlpatterns = [
     url(r'^author/(?P<ID>[a-zA-z0-9\-]+)', author_details, name='author_details'),
     url(r'^publication/(?P<ID>[a-zA-z0-9\-]+)', publication_details, name='publication_details'),
 
+    # search user who have the books
+    url(r'^userbook/(?P<ISBN>[a-zA-Z0-9\-]+)$', userbook, name='userbook'),
+
     url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
     url(r'^api/update_review$', update_review_api, name='update_review_api'),
     url(r'^api/update_location$', update_location_api, name='update_location_api'),

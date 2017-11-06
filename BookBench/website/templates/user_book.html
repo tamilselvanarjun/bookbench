@@ -1,0 +1,36 @@
+{% extends "base_page.html" %}
+
+{% block title %}Users who have this book{% endblock %}
+
+{% block content %}
+	<div class="container">
+		{# user book #}
+		<h4>Book Details:</h4>
+		<div class="jumbotron">
+			<img src="{{ book.picture.url }}" alt="{{book.name|capfirst}}" width="25%" height="25%"> <br>
+			<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+			<b>ISBN:</b> {{book.ISBN}} <br>
+			<b>Description:</b> {{book.description|capfirst}} <br>
+		
+			<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+			<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+			<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+			<input type="number" id="avg_rating" class="rating" data-size="xs" value="{{avg_rating}}" disabled="disabled" data-step="0.1">
+		</div>
+
+
+		<div class="container">
+			<h4>Users who have this book</h4>
+			{% if userbooks %}
+				{% for userbook in userbooks %}
+					<div class="jumbotron">
+						<b>User profile</b> {{userbook.user.get_full_name}} <br>
+						<b>Status</b> {{userbook.get_status_display}} <br>
+					</div>
+				{% endfor %}
+			{% else %}
+				No users have this book. :(
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

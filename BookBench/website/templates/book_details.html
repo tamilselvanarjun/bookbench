@@ -17,6 +17,7 @@
 			<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
 			<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
 			<input type="number" id="avg_rating" class="rating" data-size="xs" value="{{avg_rating}}" disabled="disabled" data-step="0.1">
+			<a href="{% url 'userbook' book.ISBN %}" class="btn btn-primary">Users who have this book</a>
 		</div>
 
 		{# my review #}
