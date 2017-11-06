@@ -1,0 +1,101 @@
+{% extends "base_page.html" %}
+
+{% block title %}Add Moderators{% endblock %}
+
+{% block content %}
+	<div class="container">
+		
+		<!-- Define a nice little form here -->
+		<div class="jumbotron">
+			<br>
+			<br>
+			<h4>Add Moderators</h4>
+			<br>
+			<form id="searchform" action="" method="POST">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-11"><input type="text" style="width: 100%; border-radius: 5px;" id="query" name="query" placeholder="Enter your query here"></div>
+					<div class="col-sm-1"><button type="button" id="searchbutton"><i class="fa fa-search" aria-hidden="true"></i></button></div>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-4">
+						<h5>Search by</h5>
+						<select multiple="multiple" name="parameters" id="parameters">
+							<option value="name">Name</option>
+							<option value="email">Email</option>
+						</select>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		{% if results %} 
+		<h4>Search results</h4> 
+			{% if user_list %}
+				{% for u in user_list %}
+				<div class="jumbotron">
+					<b>Name:</b> {{u.first_name|capfirst}} {{u.last_name|capfirst}} <br>
+					<b>Email:</b> {{u.email}} <br><br>
+					{% if u.status != 'AD' %}
+						<select name="{{u.ID}}" id="{{u.ID}}" class="toggle_mod">
+									{% if u.status == 'MO' %}
+										<option value="mod" selected="selected">Moderator</option> 
+										<option value="normie">NormalUser</option>
+									{% else %}
+										<option value="mod">Moderator</option> 
+										<option value="normie" selected="selected">NormalUser</option>
+									{% endif %}
+									
+						</select> <br>
+					{% else %}
+						<b><p style="color:red">ADMIN</p></b>
+					{% endif %}
+				</div>
+				{% endfor %}
+			{% else %} <p>No results to show.</p>
+			{% endif %}
+		{% endif %}
+		
+
+	</div>
+
+	{# <!-- End here --> #}
+	
+	<script type='text/javascript'>	
+		$(document).ready(function(){
+			$("#parameters").multiselect();	
+			$(".toggle_mod").multiselect();		
+			$("#searchbutton").click(function() {
+				var selected = $("#parameters option:selected");
+				if($("#query").val().length > 0) {
+					if(selected.length > 0) {
+						$("#searchform").submit();
+					}
+					else {
+						alert("Please select at least one parameter.");
+					}
+				}
+				else {
+					alert("Please enter some text.");
+				}
+			});	
+
+				$(".toggle_mod").on('change', function(e) {
+					var uID = $(this).attr('id');
+					var optionSelected = $("option:selected", this);
+					var valueSelected = this.value;
+					console.log(valueSelected);
+					console.log(uID);
+					// send request now
+					$.post("{% url 'mod_toggle_api' %}", {
+						'uID': uID,
+						'response': valueSelected,
+					}, function(data) {
+						console.log(data);
+					});
+				});
+			});
+	</script>
+
+{% endblock %}
