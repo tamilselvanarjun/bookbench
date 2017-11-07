@@ -22,7 +22,7 @@
 					<b>Description:</b> {{report.text}} <br>
 					<b>Review Text:</b>{{report.on_review.text}}<br>
 					<b>Reviewed By : </b>{{report.on_review.review_user.get_full_name}}<br>
-					<b>Reported By: </b>{{reprt.report_user.get_full_name}}<br>
+					<b>Reported By: </b>{{report.report_user.get_full_name}}<br>
 					<button type = "submit" class = "remove_report" id="{{report.ID}}">Remove Report</button>
 					<button type = "submit" class = "delete_review" value="{{report.ID}}" id = "{{report.on_review.ID}}">Delete Review</button> 	
 				</div>

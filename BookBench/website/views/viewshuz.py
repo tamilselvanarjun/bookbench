@@ -51,13 +51,20 @@ def add_report_api(request):
 	if request.method != "POST":
 		return HttpResponse(-1)
 	else:
-		print("I have reached")
-		print(request.POST)
+		text = request.POST['text']
+		reviewID = request.POST['reviewID']
+		
+		# get review and user
+		review = Review.objects.get(ID=reviewID)
 		user = request.user
-		text = request.POST.get('report_text')
-		review_ID = request.POST.get('reviewID')
-		review = Review.objects.get(ID = reviewID)
-		report = Report.objects.create(report_user=user, on_review=review)
-		review.text = text
-		review.save()
-		return HttpResponse(1)
+
+		try:
+			# update
+			report = Report.objects.get(report_user=user, on_review=review)
+			report.text = text
+			report.save()
+			return HttpResponse(1)
+		except:
+			report = Report.objects.create(report_user=user, on_review=review, text=text)
+			report.save()
+			return HttpResponse(0)

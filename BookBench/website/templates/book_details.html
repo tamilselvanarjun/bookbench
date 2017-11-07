@@ -76,7 +76,15 @@
 						{% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
 						{% else %} {{review.helpful}} people found it helpful.
 						{% endifequal %}
-						</span>
+						</span><br>
+
+						{# report this #}
+						{% ifequal user review.on_review.review_user %}
+							You cannot report your own review. <br>
+						{% else %}
+							<button class="report_review_button btn btn-danger" id="{{review.on_review.ID}}">Report Review</button>
+						{% endifequal %}
+
 					</div>
 				{% endfor %}
 
@@ -103,11 +111,21 @@
 							</select> <br>
 							{# number of people finding it useful #}
 						{% endifequal %}
+
 						<span id="{{review.ID}}tip">
 						{% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
 						{% else %} {{review.helpful}} people found it helpful.
 						{% endifequal %}
-						</span>
+						</span><br>
+						
+						{# report this #}
+						{% ifequal user review.review_user %}
+							You cannot report your own review. <br>
+						{% else %}
+							<button class="report_review_button btn btn-danger" id="{{review.ID}}">Report Review</button>
+						{% endifequal %}
+
+
 					</div>
 				{% endfor %}
 			{% else %}
@@ -117,10 +135,57 @@
 
 	</div>
 
+
+	{# div for reporting #}
+	<div id="report_dialog" class="dialog" style="display: none;" title="Report this post" width="70%">
+		<textarea name="" id="report_text" cols="100" rows="10"></textarea>
+		<button type="button" class="btn btn-warning" id="submit_report">Report</button>
+	</div>
+
 	
 	<!-- script -->
 	<script type="text/javascript">
 		$(document).ready(function(){
+
+			var reviewID = "";
+
+			$("#report_dialog").dialog({
+				autoOpen: false,
+			});
+			document.getElementById("report_dialog").style.display = "";
+
+			/* report the review */
+			$(".report_review_button").click(function(){
+				$("#report_dialog").dialog("open");
+				reviewID = $(this).attr("id");
+				$("#report_text").val("");
+			});
+
+			/* send report */
+			$("#submit_report").click(function(){
+				var text = $("#report_text").val();
+				if(text.length == 0)
+					alert("Please enter a report text.");
+				else {
+					$("#report_dialog").dialog("close");
+					$.post("{% url 'add_report_api' %}", {
+						'reviewID': reviewID,
+						'text': text,
+					}, function(data){
+						if(data == "0") {
+							alert("Reported successfully!");
+						} else if(data == "1") {
+							alert("Report updated successfully!");
+						} else {
+							console.log(data);
+							alert("There was some error.");
+						}
+
+					});
+				}
+
+			});
+
 			$(".review_helpful").multiselect();
 			$(".review_helpful").on('change', function(e) {
 				var reviewID = $(this).attr('id');
@@ -175,6 +240,7 @@
 					alert("Write a review first.");
 				}
 			});
+
 		});
 	</script>
 
