@@ -67,6 +67,7 @@ class User(AbstractBaseUser):
 	status = models.CharField(max_length=2, choices=USER_STATUS, default='US')
 
 	## Extra
+	active = models.BooleanField(default=True)
 	preferred_genres = models.ManyToManyField("Genre")
 	profile_picture = models.ImageField(default='default.jpg')
 
