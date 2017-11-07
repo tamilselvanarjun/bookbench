@@ -35,9 +35,10 @@ urlpatterns = [
     url(r'^api/update_location$', update_location_api, name='update_location_api'),
     url(r'^api/update_review_helpful$', update_review_helpful_api, name='update_review_helpful_api'),
     url(r'^api/mod_toggle$', mod_toggle_api, name='mod_toggle_api'),
+    url(r'^api/add_report$', add_report_api, name = 'add_report_api'),
+    url(r'^api/delete_review$', delete_review_api, name = 'delete_review_api'),
 
     url(r'^check_report/$', check_report_view, name = 'check_report'),
-    url(r'^delete_review/$', delete_review_api, name = 'delete_review_api'),
     url(r'^delete_report/$', delete_report_api, name = 'delete_report_api'),
     
     url(r'^$', main_login_page, name='main_login_page'),

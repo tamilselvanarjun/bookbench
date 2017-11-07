@@ -44,3 +44,20 @@ def delete_report_api(request):
 		report = Report.objects.get(ID=reportID)
 		report.delete()
 		return HttpResponse(1)
+
+@csrf_exempt
+@login_required(login_url='')
+def add_report_api(request):
+	if request.method != "POST":
+		return HttpResponse(-1)
+	else:
+		print("I have reached")
+		print(request.POST)
+		user = request.user
+		text = request.POST.get('report_text')
+		review_ID = request.POST.get('reviewID')
+		review = Review.objects.get(ID = reviewID)
+		report = Report.objects.create(report_user=user, on_review=review)
+		review.text = text
+		review.save()
+		return HttpResponse(1)
