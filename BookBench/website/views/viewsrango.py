@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.db.models import Avg, Sum, Count, When, Case, Value, IntegerField
 from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import *
 from ..forms import *
 import json
 
@@ -139,14 +140,30 @@ def book_details(request, ISBN):
 	user = request.user
 	book = Book.objects.get(ISBN=ISBN)
 	ctx = {'user': user, 'book': book}
-	# get the average rating
+
+	# get all the reviews
 	reviews = Review.objects.filter(review_book=book)
+
+	# get the reviews where user hasn't rated
+	reviews_user_not_rated = reviews.exclude(review_is_helpful__review_user=user).annotate(helpful= \
+								Sum(Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
+								output_field=IntegerField())))
+
+	reviews_user_rated = reviews.filter(review_is_helpful__review_user=user)
+
+	reviews_user_rated = Review_is_helpful.objects.prefetch_related(Prefetch('review_user', queryset=reviews_user_rated)).filter(review_user=user)\
+					.annotate(helpful=Sum(Case(When(on_review__review_is_helpful__is_helpful=True, then=Value(1)), \
+					default=Value(0), output_field=IntegerField())))
+
 	reviews = reviews.annotate(helpful=Sum(Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
 				output_field=IntegerField())))
+
 	# reviews = reviews.annotate(my_help)
 	if(reviews.count() > 0):
 		ctx['avg_rating'] = reviews.aggregate(Avg("rating"))["rating__avg"]
 		ctx['reviews'] = reviews
+		ctx['reviews_user_rated'] = reviews_user_rated
+		ctx['reviews_user_not_rated'] = reviews_user_not_rated
 
 	# get review for the user
 	my_review = reviews.filter(review_user=user)
