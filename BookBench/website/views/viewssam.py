@@ -206,32 +206,33 @@ def mod_toggle_api(request):
 	return HttpResponse(count)
 
 
-# @csrf_exempt
-# @login_required(login_url='')
-# def delete_user_api(request):
-# 	if request.method!="POST":
-# 		return HttpResponse(-1)
-# 	else:
-# 		reviewID = request.POST['reviewID']
-# 		review = Review.objects.get(ID=reviewID)
-# 		review.delete()
-# 		return HttpResponse(1)
+@csrf_exempt
+@login_required(login_url='')
+def delete_user_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	else:
+		delete_userID = request.POST['deleteID']
+		delete_user = User.objects.get(ID=delete_userID)
+		delete_user.active = False
+		delete_user.save()
+		return HttpResponse(1)
 
-# @csrf_exempt
-# @login_required(login_url='')
-# def delete_report_user_api(request):
-# 	if request.method!="POST":
-# 		return HttpResponse(-1)
-# 	else:
-# 		print(request.POST)
-# 		reportID = request.POST['reportID']
-# 		report = Report.objects.get(ID=reportID)
-# 		report.delete()
-# 		return HttpResponse(1)
+@csrf_exempt
+@login_required(login_url='')
+def delete_report_user_api(request):
+	if request.method!="POST":
+		return HttpResponse(-1)
+	else:
+		print(request.POST)
+		reportID = request.POST['reportID']
+		report = ReportUser.objects.get(ID=reportID)
+		report.delete()
+		return HttpResponse(1)
 
-# @login_required(login_url='')
-# def check_report_user_view(request):
-# 	user = request.user
-# 	if request.method == "GET":
-# 		reports = Report.objects.all()
-# 		return render(request, '../templates/check_report.html', {'user' : user, 'reports' : reports, 'results' : True})
+@login_required(login_url='')
+def check_report_user_view(request):
+	user = request.user
+	if request.method == "GET":
+		reports = ReportUser.objects.all()
+		return render(request, '../templates/check_report_user.html', {'user' : user, 'reports' : reports, 'results' : True})

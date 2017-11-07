@@ -3,70 +3,75 @@
 {% block title %}Welcome to BookBench{% endblock %}
 
 {% block content %}
-	<div class="container">
-		{% if messages %}
+	{% if user.active == True %}
 		<div class="container">
-			{% for message in messages %}
-				{% if 'error' in message.tags %}
-					<p class="text-error">{{message}}</p>
-				{% else %}
-					<p class="text-success">{{message}}</p>
-				{% endif %}
-			{% endfor %}			
-		</div>
-		{% endif %}
-	
-		<div class="jumbotron">
-			<a href="#" id="changedp"><img src="{{ user.profile_picture.url }}" alt="{{user.get_full_name}}" width="20%" height="20%"></a><br>
-			Click your profile picture to change it. <br>
-			<h3>{{ user.get_full_name }}</h3>
-			<p class="text-warning">{{user.get_status_display}}</p>
-		</div>
+			{% if messages %}
+			<div class="container">
+				{% for message in messages %}
+					{% if 'error' in message.tags %}
+						<p class="text-error">{{message}}</p>
+					{% else %}
+						<p class="text-success">{{message}}</p>
+					{% endif %}
+				{% endfor %}			
+			</div>
+			{% endif %}
 		
-		{# all the buttons are here for now #}
-		{% if request.user.status == 'AD' %}
-			<b>Hey Admin!</b><br><br>
-			<a href="{% url 'add_books' %}" class="btn btn-primary">Add new Books!</a><br> <br>
-			<a href="{% url 'add_publications' %}" class="btn btn-primary">Add new publications!</a><br> <br>
-			<a href="{% url 'add_authors' %}" class="btn btn-primary">Add new authors!</a><br> <br>
-			<a href="{% url 'add_genres' %}" class="btn btn-primary">Add new genres!</a><br> <br>
-			<a href="{% url 'add_moderators' %}" class="btn btn-primary">Add moderators!</a><br> <br>
-		{% endif %}
-		{% if request.user.status == 'MO' %}
-			<b>Hey Moderator!</b><br><br>
-			<a href="{% url 'check_report' %}" class="btn btn-primary">Check Reports!</a><br> <br>
-		{% endif %}
-		<br><br>
-		<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a>
-		<a href="{% url 'advanced_search' %}" class="btn btn-success">Search books</a>
-		{# <a href="{% url 'my_books' %}"></a> #}
+			<div class="jumbotron">
+				<a href="#" id="changedp"><img src="{{ user.profile_picture.url }}" alt="{{user.get_full_name}}" width="20%" height="20%"></a><br>
+				Click your profile picture to change it. <br>
+				<h3>{{ user.get_full_name }}</h3>
+				<p class="text-warning">{{user.get_status_display}}</p>
+			</div>
+			
+			{# all the buttons are here for now #}
+			{% if request.user.status == 'AD' %}
+				<b>Hey Admin!</b><br><br>
+				<a href="{% url 'add_books' %}" class="btn btn-primary">Add new Books!</a><br> <br>
+				<a href="{% url 'add_publications' %}" class="btn btn-primary">Add new publications!</a><br> <br>
+				<a href="{% url 'add_authors' %}" class="btn btn-primary">Add new authors!</a><br> <br>
+				<a href="{% url 'add_genres' %}" class="btn btn-primary">Add new genres!</a><br> <br>
+				<a href="{% url 'add_moderators' %}" class="btn btn-primary">Add moderators!</a><br> <br>
+				<a href="{% url 'check_report_user' %}" class="btn btn-primary">Check User Reports!</a><br> <br>
+			{% endif %}
+			{% if request.user.status == 'MO' %}
+				<b>Hey Moderator!</b><br><br>
+				<a href="{% url 'check_report' %}" class="btn btn-primary">Check Reports!</a><br> <br>
+			{% endif %}
+			<br><br>
+			<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a><br><br>
+			<a href="{% url 'advanced_search' %}" class="btn btn-success">Search books</a><br><br>
+			{# <a href="{% url 'my_books' %}"></a> #}
 
-		<form action="{% url 'logout_view' %}" method="POST">
-			<input class="btn btn-danger" type="submit" value="Logout">
-		</form>
-	</div>
+			<form action="{% url 'logout_view' %}" method="POST">
+				<input class="btn btn-danger" type="submit" value="Logout">
+			</form>
+		</div>
 
-	<!-- handler for changing profile picture -->
-	<script type="text/javascript">
-		$(document).ready(function(){
+		<!-- handler for changing profile picture -->
+		<script type="text/javascript">
+			$(document).ready(function(){
 
-			document.getElementById("dialog").style.display = "";
-			$("#dialog").dialog({
-				autoOpen: false,
+				document.getElementById("dialog").style.display = "";
+				$("#dialog").dialog({
+					autoOpen: false,
+				});
+
+				$("#changedp").click(function() {
+					$("#dialog").dialog( "open" );
+				});
 			});
+		</script>
 
-			$("#changedp").click(function() {
-				$("#dialog").dialog( "open" );
-			});
-		});
-	</script>
-
-		<!-- dialog -->
-	<div id="dialog" style="display: none;" title="Upload profile picture">
-		<form action="" method="POST" enctype="multipart/form-data">
-			{% csrf_token %}
-			<input type="file" name="image" accept="image/*" required="required"> <br>
-			<input type="submit" class="btn btn-primary" value="Upload!">
-		</form>
-	</div>
+			<!-- dialog -->
+		<div id="dialog" style="display: none;" title="Upload profile picture">
+			<form action="" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<input type="file" name="image" accept="image/*" required="required"> <br>
+				<input type="submit" class="btn btn-primary" value="Upload!">
+			</form>
+		</div>
+	{% else %}
+		<br><br><b><p style = "color:red">YOU HAVE BEEN BANNED! (Please contact administrator) </p></b><br><br>
+	{% endif %}
 {% endblock %}
