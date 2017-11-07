@@ -39,8 +39,49 @@
 		<div class="">
 			<h4>All Reviews</h4>
 			{% if reviews %}
-				{# check for some review #}
-				{% for review in reviews %}
+
+				{# check for reviews where user has rated  #}
+				{% for review in reviews_user_rated %}
+					<div class="jumbotron">
+						<b>Reviewed by:</b> {{review.on_review.review_user.get_full_name|capfirst}} <br>
+						<b>Reviewed on:</b> {{review.on_review.timestamp}} <br>
+						{% if review.text %}
+						<b>Description:</b> {{review.on_review.text}} <br>
+						{% endif %}
+						<input type="number" id="{{review.on_review.ID}}" class="rating" data-size="xs" value="{{review.on_review.rating}}" disabled="disabled" data-step="1">
+
+						{# check if I'm the one who's reviewed it #}
+						{% ifequal user review.on_review.review_user %}
+							You cannot rate your own review as helpful. <br>
+						{% else %}
+							<b>Was this review helpful?</b>
+							{# select option if already exists #}
+							{% if review.is_helpful %}
+								<select name="{{review.on_review.ID}}" id="{{review.on_review.ID}}" class="review_helpful">
+									<option value="yes" selected="selected">Yes</option>
+									<option value="no">No</option>
+									<option value="none">None</option>
+								</select> 
+							{% else %}
+								<select name="{{review.on_review.ID}}" id="{{review.on_review.ID}}" class="review_helpful">
+									<option value="yes">Yes</option>
+									<option value="no" selected="selected">No</option>
+									<option value="none">None</option>
+								</select> 
+							{% endif %}
+							<br>
+							{# number of people finding it useful #}
+						{% endifequal %}
+						<span id="{{review.on_review.ID}}tip">
+						{% ifequal review.helpful 1 %}{{review.helpful}} person found it helpful.
+						{% else %} {{review.helpful}} people found it helpful.
+						{% endifequal %}
+						</span>
+					</div>
+				{% endfor %}
+
+				{# check for reviews where user hasn't rated #}
+				{% for review in reviews_user_not_rated %}
 					<div class="jumbotron">
 						<b>Reviewed by:</b> {{review.review_user.get_full_name|capfirst}} <br>
 						<b>Reviewed on:</b> {{review.timestamp}} <br>

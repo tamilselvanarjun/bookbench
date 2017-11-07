@@ -1,0 +1,61 @@
+{% extends "base_page.html" %}
+
+{% block title %}Check User Reports{% endblock %}
+
+{% block content %}
+
+<div class="container">
+		
+		<div class="jumbotron">
+			<br>
+			<br>
+			<h4>Check User Reports</h4>
+			<br>
+		</div>
+
+		{% if results %} 
+		<h4>Search User results</h4> 
+			{% if reports %}
+				{% for report in reports %}
+				<div class="jumbotron" id = "div_{{report.ID}}">
+					<b>Report ID</b> {{report.ID}} <br>
+					<b>Description:</b> {{report.text}} <br>
+					<b>Reported User Name:</b>{{report.on_user.get_full_name}}<br>
+					<b>Reported By: </b>{{report.report_user.get_full_name}}<br>
+					<button type = "submit" class = "remove_report_user" id="{{report.ID}}">Remove Report</button>
+					<button type = "submit" class = "delete_user" value="{{report.ID}}" id = "{{report.on_user.ID}}">Ban User !</button> 	
+				</div>
+				{% endfor %}
+			{% else %} <p>No results to show.</p>
+			{% endif %}
+		{% endif %}
+
+	</div>
+	{# <!-- End here --> #}
+	
+	<script type='text/javascript'>	
+		$(document).ready(function() {
+			$(".remove_report_user").click(function() {
+				var report_id = $(this).attr('id');
+				$.post("{% url 'delete_report_user_api' %}", {
+					'reportID': report_id,
+				}, function(data) {
+					console.log(data);
+					$("#div_"+report_id).hide();
+				});
+			});
+
+			$(".delete_user").click(function() {
+				// var report_id = $(this).val();
+				var report_id = $(this).val();
+				var parent = $(this).parent();
+				var delete_id = $(this).attr('id');
+				$.post("{% url 'delete_user_api' %}", { 'deleteID' : delete_id}, function(data){
+					console.log(data);
+					parent.hide();
+				});
+			});	
+		});
+	</script>
+
+{% endblock %}

@@ -67,6 +67,7 @@ class User(AbstractBaseUser):
 	status = models.CharField(max_length=2, choices=USER_STATUS, default='US')
 
 	## Extra
+	active = models.BooleanField(default=True)
 	preferred_genres = models.ManyToManyField("Genre")
 	profile_picture = models.ImageField(default='default.jpg')
 
@@ -153,6 +154,15 @@ class Report(models.Model):
 	# user who reported and the review on which report was given
 	report_user = models.ForeignKey("User", on_delete=models.CASCADE)
 	on_review = models.ForeignKey("Review", on_delete=models.CASCADE)
+
+class ReportUser(models.Model):
+	ID = models.AutoField(primary_key=True)
+	text = models.CharField(max_length=1000)
+	timestamp = models.DateTimeField(auto_now=True)	
+
+	# user who reported and the user on which report was given
+	report_user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='report_user')
+	on_user = models.ForeignKey("User", on_delete=models.CASCADE, related_name='on_user')
 
 
 class UserOwnedBook(models.Model):

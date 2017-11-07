@@ -40,6 +40,10 @@ urlpatterns = [
 
     url(r'^check_report/$', check_report_view, name = 'check_report'),
     url(r'^delete_report/$', delete_report_api, name = 'delete_report_api'),
+
+    url(r'^check_report_user/$', check_report_user_view, name = 'check_report_user'),
+    url(r'^delete_user/$', delete_user_api, name = 'delete_user_api'),
+    url(r'^delete_report_user/$', delete_report_user_api, name = 'delete_report_user_api'),
     
     url(r'^$', main_login_page, name='main_login_page'),
 ]
