@@ -26,16 +26,18 @@
 			
 			{# all the buttons are here for now #}
 			{% if request.user.status == 'AD' %}
-				<b>Hey Admin!</b><br><br>
+				{# <b>Hey Admin!</b><br><br> #}
 				<a href="{% url 'add_books' %}" class="btn btn-primary">Add new Books!</a><br> <br>
 				<a href="{% url 'add_publications' %}" class="btn btn-primary">Add new publications!</a><br> <br>
 				<a href="{% url 'add_authors' %}" class="btn btn-primary">Add new authors!</a><br> <br>
 				<a href="{% url 'add_genres' %}" class="btn btn-primary">Add new genres!</a><br> <br>
 				<a href="{% url 'add_moderators' %}" class="btn btn-primary">Add moderators!</a><br> <br>
 				<a href="{% url 'check_report_user' %}" class="btn btn-primary">Check User Reports!</a><br> <br>
+				<a href="{% url 'banned_users' %}" class="btn btn-primary">See banned users</a><br> <br>
+
 			{% endif %}
-			{% if request.user.status == 'MO' %}
-				<b>Hey Moderator!</b><br><br>
+			{% if request.user.status != 'US' %}
+				{# <b>Hey Moderator!</b><br><br> #}
 				<a href="{% url 'check_report' %}" class="btn btn-primary">Check Reports!</a><br> <br>
 			{% endif %}
 			<br><br>

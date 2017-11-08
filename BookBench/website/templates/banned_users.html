@@ -1,0 +1,54 @@
+{% extends "base_page.html" %}
+
+{% block title %}Banned users{% endblock %}
+
+{% block content %}
+	
+	<div class="container">
+		<h4>Banned users</h4> 
+			{% if banned %}
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<td>User</td>
+							<td>Email</td>
+							<td>Unban</td>
+						</tr>
+					</thead>
+						
+					<tbody>
+						{% for b in banned %}
+						<tr id="tr_{{b.ID}}">
+							<td>{{b.get_full_name}}</td>
+							<td>{{b.email}}</td>
+							<td><button class="btn btn-warning unban" id="{{b.ID}}">Unban</button></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+					
+				</table>
+
+			{% else %} 
+				<p>No results to show.</p>
+			{% endif %}
+		
+
+	</div>
+	{# <!-- End here --> #}
+	
+	<script type='text/javascript'>	
+		$(document).ready(function() {
+			$(".unban").click(function() {
+				var id = $(this).attr('id');
+				$.post("{% url 'unban_banned_user' %}",{
+					'ID': id,
+				}, function(data) {
+					if(data=="1") {
+						$("#tr_" + id).remove();
+					}
+				});
+			});
+		});
+	</script>
+
+{% endblock %}

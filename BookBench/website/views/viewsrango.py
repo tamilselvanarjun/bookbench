@@ -151,7 +151,8 @@ def book_details(request, ISBN):
 
 	reviews_user_rated = reviews.filter(review_is_helpful__review_user=user)
 
-	reviews_user_rated = Review_is_helpful.objects.prefetch_related(Prefetch('review_user', queryset=reviews_user_rated)).filter(review_user=user)\
+	reviews_user_rated = Review_is_helpful.objects.prefetch_related(Prefetch('review_user', queryset=reviews_user_rated))\
+					.filter(on_review__review_book=book).filter(review_user=user)\
 					.annotate(helpful=Sum(Case(When(on_review__review_is_helpful__is_helpful=True, then=Value(1)), \
 					default=Value(0), output_field=IntegerField())))
 
@@ -362,3 +363,52 @@ def userbook(request, ISBN):
 	}
 
 	return render(request, '../templates/user_book.html', ctx)
+
+
+@login_required
+def user_details(request, ID):
+	me = request.user
+	user_ = User.objects.get(ID=ID)
+
+	ctx = {
+		'me': me,
+		'user': user_,
+	}
+
+	return render(request, '../templates/user_details.html', ctx)
+
+@csrf_exempt
+@login_required
+def report_user_api(request):
+	print(request.POST)
+	ID = request.POST['ID']
+	text = request.POST['text']
+	user_ = User.objects.get(ID=ID)
+	me = request.user
+	userreport = ReportUser.objects.get_or_create(on_user=user_, report_user=me)[0]
+	userreport.text = text
+	userreport.save()
+	return HttpResponse(1)
+
+@login_required
+def banned_users(request):
+	user = request.user
+	banned = User.objects.filter(active=False)
+
+	ctx = {
+		'user': user,
+		'banned' : banned,
+	}
+
+	return render(request, '../templates/banned_users.html', ctx)
+
+
+@csrf_exempt
+@login_required
+def unban_banned_user(request):
+	user = request.user
+	ID = request.POST['ID']
+	banned_user = User.objects.get(ID=ID)
+	banned_user.active = True
+	banned_user.save()
+	return HttpResponse(1)

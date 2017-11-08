@@ -1,0 +1,65 @@
+{% extends "base_page.html" %}
+
+{% block title %}Users who have this book{% endblock %}
+
+{% block content %}
+	<div class="container">
+		
+		<div class="jumbotron">
+			<img src="{{ user.profile_picture.url }}" alt="{{user.get_full_name}}" width="20%" height="20%"><br>
+			<h3>{{ user.get_full_name }}</h3>
+			<p class="text-warning">{{user.get_status_display}}</p>
+			{# give user report button #}
+			<button class="btn btn-danger" id="report_prompt">Report User</button>
+		</div>
+
+		{# report UI #}
+		<div id="report_user" class="dialog" style="display: none;" title="Report this user" width="70%">
+			Do you want to report this user?
+			<textarea name="" id="text" cols="100" rows="10">Your report here</textarea> <br>
+			<button type="button" class="btn btn-warning" id="submit_report">Report</button>
+		</div>
+
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#report_user").dialog({
+					autoOpen: false,
+					width: "90%",
+					maxWidth: "768px",
+				});
+
+				document.getElementById("report_user").style.display = "";
+
+				$("#report_prompt").click(function(){
+					$("#report_user").dialog("open");
+				});
+
+				$("#submit_report").click(function(){
+
+					var text = $("#text").val();
+
+					if(text.length > 0) {
+
+						$.post("{% url 'report_user_api' %}", {
+							'ID': "{{user.ID}}",
+							'text': text,
+						}, function(data) {
+							if(data=='1') 
+								alert("User reported successfully.");
+						});
+						$("#report_user").dialog("close");
+
+					} else {
+						alert("Enter some text");
+					}
+
+				});
+
+
+			});
+		</script>
+
+
+	</div>
+{% endblock %}

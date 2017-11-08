@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^genre/(?P<ID>[a-zA-z0-9\-]+)', genre_details, name='genre_details'),
     url(r'^author/(?P<ID>[a-zA-z0-9\-]+)', author_details, name='author_details'),
     url(r'^publication/(?P<ID>[a-zA-z0-9\-]+)', publication_details, name='publication_details'),
+    url(r'^profile/(?P<ID>[a-zA-z0-9]+)', user_details, name='user_details'),
 
     # search user who have the books
     url(r'^userbook/(?P<ISBN>[a-zA-Z0-9\-]+)$', userbook, name='userbook'),
@@ -37,9 +38,12 @@ urlpatterns = [
     url(r'^api/mod_toggle$', mod_toggle_api, name='mod_toggle_api'),
     url(r'^api/add_report$', add_report_api, name = 'add_report_api'),
     url(r'^api/delete_review$', delete_review_api, name = 'delete_review_api'),
+    url(r'^api/report_user_api', report_user_api, name='report_user_api'),
+    url(r'^api/unban_banned_user$', unban_banned_user, name='unban_banned_user'),
 
     url(r'^check_report/$', check_report_view, name = 'check_report'),
     url(r'^delete_report/$', delete_report_api, name = 'delete_report_api'),
+    url(r'^banned_users/$', banned_users, name='banned_users'),
 
     url(r'^check_report_user/$', check_report_user_view, name = 'check_report_user'),
     url(r'^delete_user/$', delete_user_api, name = 'delete_user_api'),
