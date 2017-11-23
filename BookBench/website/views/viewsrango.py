@@ -115,11 +115,11 @@ def advanced_search(request):
 			When(Q(userwishlist__status='WR')&Q(userwishlist__user=user),then=Value(2)),
 			default = Value(-1),output_field=IntegerField()))
 
-		qs = qs.annotate(owned_status = Case(
+		qs = qs.annotate(owned_status = Sum(Case(
 			When(Q(userownedbook__status='AV')&Q(userownedbook__user=user),then=Value(0)),
 			When(Q(userownedbook__status='UA')&Q(userownedbook__user=user),then=Value(1)),
 			When(Q(userownedbook__status='LE')&Q(userownedbook__user=user),then=Value(2)),
-			default = Value(-1),output_field=IntegerField()))
+			default = Value(-1),output_field=IntegerField())))
 
 		#################################
 
@@ -129,6 +129,7 @@ def advanced_search(request):
 		else:
 			qs = qs.order_by('-score')
 		qs = qs.distinct()
+		
 
 		# pagination
 		paginator = Paginator(qs, 10)

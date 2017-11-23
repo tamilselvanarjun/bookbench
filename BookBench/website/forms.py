@@ -24,10 +24,13 @@ class AdminUserForm(forms.ModelForm):
 
 
 class UserLoginForm(forms.ModelForm):
-	password = forms.CharField(widget=forms.PasswordInput())
+	password = forms.CharField(widget=forms.PasswordInput(attrs = {'class':'pass','placeholder':'Password','required':''}))
 	class Meta:
 		model = User
 		fields = ['email', 'password']
+		widgets = {
+			'email': forms.TextInput(attrs = {'class':'user','placeholder':'E-mail','required':''})
+		}
 
 class AddBooksForm(forms.ModelForm):
 	class Meta:
