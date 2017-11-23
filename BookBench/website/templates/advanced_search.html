@@ -1,3 +1,4 @@
+
 {% extends "base_page.html" %}
 
 {% block title %}Advanced Search{% endblock %}
@@ -62,8 +63,6 @@
 					<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
 					<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
 
-					{{ book.wish_status }}
-
 					<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="wishlist">
 								<option value="none" {% if book.wish_status == -1 %} selected="selected" {% endif %}>None</option>
 								<option value="RE" {% if book.wish_status == 0 %} selected="selected" {% endif %}>Read</option>
@@ -71,7 +70,6 @@
 								<option value="WR" {% if book.wish_status == 2 %} selected="selected" {% endif %}>Want to read</option>
 					</select> <br>
 
-					{{ book.owned_status}}
 					<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
 								<option value="none" {% if book.owned_status == -1 %} selected="selected" {% endif %}>None</option>
 								<option value="AV" {% if book.owned_status == 0 %} selected="selected" {% endif %}>Available</option>
