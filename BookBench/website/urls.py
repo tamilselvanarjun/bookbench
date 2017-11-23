@@ -20,7 +20,8 @@ urlpatterns = [
     url(r'^prefgenres/$', preferred_genres, name='preferred_genres'),
     url(r'^search/', advanced_search, name='advanced_search'),
     url(r'^book/(?P<ISBN>[a-zA-Z0-9\-]+)$', book_details, name='book_details'),
-
+    url(r'^message/$', messages, name = 'message'),
+    
     # details of per genre/author/publication
     url(r'^genre/(?P<ID>[a-zA-z0-9\-]+)', genre_details, name='genre_details'),
     url(r'^author/(?P<ID>[a-zA-z0-9\-]+)', author_details, name='author_details'),
@@ -40,6 +41,8 @@ urlpatterns = [
     url(r'^api/delete_review$', delete_review_api, name = 'delete_review_api'),
     url(r'^api/report_user_api', report_user_api, name='report_user_api'),
     url(r'^api/unban_banned_user$', unban_banned_user, name='unban_banned_user'),
+
+    url(r'^api/add_message$', add_message_api, name='add_message_api'),
 
     url(r'^check_report/$', check_report_view, name = 'check_report'),
     url(r'^delete_report/$', delete_report_api, name = 'delete_report_api'),

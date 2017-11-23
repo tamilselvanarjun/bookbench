@@ -186,3 +186,11 @@ class Review_is_helpful(models.Model):
 	# associated user who gave the review, and the review itself
 	review_user = models.ForeignKey('User', on_delete=models.CASCADE)
 	on_review = models.ForeignKey('Review', on_delete=models.CASCADE)
+
+
+class Message(models.Model):
+	message_id = models.AutoField(primary_key=True)
+	sender = models.ForeignKey('User', on_delete= models.CASCADE, related_name='sender')
+	receiver = models.ForeignKey('User', on_delete=models.CASCADE, related_name = 'receiver')
+	message_text = models.CharField(max_length=1000)
+	message_timestamp = models.DateTimeField(auto_now= True)

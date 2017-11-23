@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     url(r'^projectbackend/', admin.site.urls),
     url(r'', include('website.urls')),

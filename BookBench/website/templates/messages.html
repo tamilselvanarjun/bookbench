@@ -1,0 +1,103 @@
+{% extends "base_page.html" %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+	{% load mytags %}
+	<div class="container">
+		<button class = 'inbox' type = 'submit'>Inbox</button>
+		<button class = 'outbox' type = 'submit'>Outbox</button>
+		<button class = 'compose' type = 'submit'>Compose</button>
+	</div>
+
+	<div class='content_inbox'>
+		<!-- {{message.sender.getfullname}} -->
+		<h4>InBox</h4> 
+			{% if inbox %}
+				{% for message in inbox %}
+				<div class="jumbotron">
+					<h4><a href="{% url 'user_details' message.sender.ID %}">{{message.sender.get_full_name}}</a></h4>
+					<b>Text:</b> {{message.message_text}} <br>
+					<b>Time:</b>{{message.message_timestamp}}<br>
+					<button class = 'reply' type="submit" id = "{{message.sender.email}}">Reply</button>
+				</div>
+				{% endfor %}
+				
+			{% else %} <p>No messages to show.</p>
+			{% endif %}
+
+	</div>
+
+	<div class='content_outbox'>
+		<h4>OutBox</h4> 
+			{% if outbox %}
+				{% for message in outbox %}
+				<div class="jumbotron">
+					<h4><a href="{% url 'user_details' message.receiver.ID %}">{{message.receiver.get_full_name}}</a></h4>
+					<b>Text:</b> {{message.message_text}} <br>
+					<b>Time:</b>{{message.message_timestamp}}<br>
+				</div>
+				{% endfor %}
+				
+			{% else %} <p>No messages to show.</p>
+			{% endif %}
+
+	</div>	
+
+	<div  class = 'content_compose' style = "position :'fixed';">
+		<h4>Compose</h4>
+		Email ID : <br><input type = "email" name = 'email_id' id = "email_id"> <br>
+		Message : <br><input type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
+		<button type="submit" value="Submit" class = 'Send'>Send</button>		
+	</div>
+
+	<script type='text/javascript'>	
+
+		$(document).ready(function() {
+			$(".content_outbox").hide();
+			$(".content_compose").hide();
+
+			$(".inbox").click(function() {
+				$(".content_inbox").show();
+				$(".content_outbox").hide();
+				$(".content_compose").hide();
+			});
+
+			$(".outbox").click(function(){
+				$(".content_inbox").hide();
+				$(".content_outbox").show();
+				$(".content_compose").hide();
+			});
+
+
+			$(".compose").click(function(){
+				$(".content_compose").show();
+			});
+
+			$(".Send").click(function(){
+				var email_id = $("#email_id").val();
+				var message_text = $("#message_text").val();
+				$.post("{% url 'add_message_api' %}", {
+						'email_id': email_id,
+						'message_text': message_text,
+					}, function(data){
+						if (data == "-1"){
+							alert("Some error in sending the message");
+						}
+						else{
+							alert("Message sent successfully");
+							location.reload();
+						}
+					});
+			});
+
+			$(".reply").click(function(){
+				$(".content_compose").show();
+				var sender_email = $(this).attr("id");
+				$("#email_id").val(sender_email);
+			});
+
+		});
+	</script>
+
+{% endblock %}
