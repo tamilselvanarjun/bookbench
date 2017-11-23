@@ -61,6 +61,24 @@
 					<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
 					<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
 					<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+
+					{{ book.wish_status }}
+
+					<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="wishlist">
+								<option value="none" {% if book.wish_status == -1 %} selected="selected" {% endif %}>None</option>
+								<option value="RE" {% if book.wish_status == 0 %} selected="selected" {% endif %}>Read</option>
+								<option value="CR" {% if book.wish_status == 1 %} selected="selected" {% endif %}>Currently Reading</option>
+								<option value="WR" {% if book.wish_status == 2 %} selected="selected" {% endif %}>Want to read</option>
+					</select> <br>
+
+					{{ book.owned_status}}
+					<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
+								<option value="none" {% if book.owned_status == -1 %} selected="selected" {% endif %}>None</option>
+								<option value="AV" {% if book.owned_status == 0 %} selected="selected" {% endif %}>Available</option>
+								<option value="UA" {% if book.owned_status == 1 %} selected="selected" {% endif %}>Unavailable</option>
+								<option value="LE" {% if book.owned_status == 2 %} selected="selected" {% endif %}>Lent</option>
+					</select> <br>
+
 				</div>
 				{% endfor %}
 				{# Here the book thingy ends #}
@@ -106,6 +124,42 @@
 				else {
 					alert("Please enter some text.");
 				}
+			});
+
+			$(".wishlist").multiselect();
+			$(".wishlist").on('change', function(e) {
+				var bookISBN = $(this).attr('id');
+				console.log(bookISBN);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+				// send request now
+				$.post("{% url 'wishlist_api' %}", {
+					'bookISBN': bookISBN,
+					'status': valueSelected,
+				}, function(data) {
+
+					console.log(data);
+					
+				});
+			});
+
+			$(".owned_books").multiselect();
+			$(".owned_books").on('change', function(e) {
+				var bookISBN = $(this).attr('id');
+				console.log(bookISBN);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+				// send request now
+				$.post("{% url 'owned_books_api' %}", {
+					'bookISBN': bookISBN,
+					'status': valueSelected,
+				}, function(data) {
+
+					console.log(data);
+					
+				});
 			});
 
 		});

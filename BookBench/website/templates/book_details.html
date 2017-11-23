@@ -16,6 +16,21 @@
 			<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
 			<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
 			<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+
+			<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="wishlist">
+				<option value="none" {% if wishlist == "none" %} selected="selected" {% endif %}>None</option>
+				<option value="RE" {% if wishlist == "RE" %} selected="selected" {% endif %}>Read</option>
+				<option value="CR" {% if wishlist == "CR" %} selected="selected" {% endif %}>Currently Reading</option>
+				<option value="WR" {% if wishlist == "WR" %} selected="selected" {% endif %}>Want to read</option>
+			</select> <br>
+
+			<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
+						<option value="none" {% if owned == "none" %} selected="selected" {% endif %}>None</option>
+						<option value="AV" {% if owned == "AV" %} selected="selected" {% endif %}>Available</option>
+						<option value="UA" {% if owned == "UA" %} selected="selected" {% endif %}>Unavailable</option>
+						<option value="LE" {% if owned == "LE" %} selected="selected" {% endif %}>Lent</option>
+			</select> <br>
+
 			<input type="number" id="avg_rating" class="rating" data-size="xs" value="{{avg_rating}}" disabled="disabled" data-step="0.1">
 			<a href="{% url 'userbook' book.ISBN %}" class="btn btn-primary">Users who have this book</a>
 		</div>
@@ -239,6 +254,42 @@
 				else {
 					alert("Write a review first.");
 				}
+			});
+
+			$(".wishlist").multiselect();
+			$(".wishlist").on('change', function(e) {
+				var bookISBN = $(this).attr('id');
+				console.log(bookISBN);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+				// send request now
+				$.post("{% url 'wishlist_api' %}", {
+					'bookISBN': bookISBN,
+					'status': valueSelected,
+				}, function(data) {
+
+					console.log(data);
+					
+				});
+			});
+
+			$(".owned_books").multiselect();
+			$(".owned_books").on('change', function(e) {
+				var bookISBN = $(this).attr('id');
+				console.log(bookISBN);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+				// send request now
+				$.post("{% url 'owned_books_api' %}", {
+					'bookISBN': bookISBN,
+					'status': valueSelected,
+				}, function(data) {
+
+					console.log(data);
+					
+				});
 			});
 
 		});

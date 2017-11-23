@@ -106,6 +106,23 @@ def advanced_search(request):
 			qs = qs | (Book.objects.filter(authors__in=authors))
 
 		qs = qs.annotate(score=Coalesce(Sum('review__rating'), 0))
+
+		#################################
+
+		qs = qs.annotate(wish_status = Case(
+			When(Q(userwishlist__status='RE')&Q(userwishlist__user=user),then=Value(0)),
+			When(Q(userwishlist__status='CR')&Q(userwishlist__user=user),then=Value(1)),
+			When(Q(userwishlist__status='WR')&Q(userwishlist__user=user),then=Value(2)),
+			default = Value(-1),output_field=IntegerField()))
+
+		qs = qs.annotate(owned_status = Case(
+			When(Q(userownedbook__status='AV')&Q(userownedbook__user=user),then=Value(0)),
+			When(Q(userownedbook__status='UA')&Q(userownedbook__user=user),then=Value(1)),
+			When(Q(userownedbook__status='LE')&Q(userownedbook__user=user),then=Value(2)),
+			default = Value(-1),output_field=IntegerField()))
+
+		#################################
+
 		# order the books
 		if "name" == sortCondition:
 			qs = qs.order_by('name')
@@ -158,6 +175,20 @@ def book_details(request, ISBN):
 
 	reviews = reviews.annotate(helpful=Sum(Case(When(review_is_helpful__is_helpful=True, then=Value(1)), default=Value(0), \
 				output_field=IntegerField())))
+
+	##############################################
+	userWishList = UserWishlist.objects.filter(user=user,book=book)
+	if(userWishList):
+		ctx['wishlist'] = userWishList[0].status
+	else:
+		ctx['wishlist'] = "none"
+
+	userOwnedBook = UserOwnedBook.objects.filter(user=user,book=book)
+	if(userOwnedBook):
+		ctx['owned'] = userOwnedBook[0].status
+	else:
+		ctx['owned'] = "none"
+	##############################################
 
 	# reviews = reviews.annotate(my_help)
 	if(reviews.count() > 0):

@@ -51,6 +51,9 @@ urlpatterns = [
     url(r'^check_report_user/$', check_report_user_view, name = 'check_report_user'),
     url(r'^delete_user/$', delete_user_api, name = 'delete_user_api'),
     url(r'^delete_report_user/$', delete_report_user_api, name = 'delete_report_user_api'),
+
+    url(r'^api/wishlist$', view_wishlist, name='wishlist_api'),
+    url(r'^api/owned_books$', view_owned_books, name='owned_books_api'),
     
     url(r'^$', main_login_page, name='main_login_page'),
 ]

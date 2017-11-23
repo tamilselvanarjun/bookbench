@@ -1,0 +1,100 @@
+{% extends "base_page.html" %}
+
+{% block title %}Owned Books{% endblock %}
+
+{% block content %}
+	{% load mytags %}
+	<h4>Owned books</h4> 
+		{% if user_owned_books %}
+			{% for book in user_owned_books %}
+			<div class="jumbotron">
+				<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+				<b>Score:</b> {{book.score}} <br>
+				<b>ISBN:</b> {{book.ISBN}} <br>
+				<b>Description:</b> {{book.description|capfirst}} <br>
+
+				<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+				<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+				<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+
+				{% if book.owned_status == 0 %}
+
+				<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
+							<option value="none">None</option>
+							<option value="AV" selected="selected">Available</option>
+							<option value="UA">Unavailable</option>
+							<option value="LE">Lent</option>
+				</select> <br>
+				
+				{% elif book.owned_status == 1 %}
+
+				<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
+							<option value="none">None</option>
+							<option value="AV">Available</option>
+							<option value="UA" selected="selected">Unavailable</option>
+							<option value="LE">Lent</option>
+				</select> <br>
+
+				{% else %}
+
+				<select name="{{book.ISBN}}" id="{{book.ISBN}}" class="owned_books">
+							<option value="none">None</option>
+							<option value="AV">Available</option>
+							<option value="UA">Unavailable</option>
+							<option value="LE" selected="selected">Lent</option>
+				</select> <br>
+
+				{% endif %}
+
+			</div>
+			{% endfor %}
+			{# Here the book thingy ends #}
+			<div class="pagination text-center container">
+			    <span class="step-links">
+			        {% if books.has_previous %}
+			            <a href="?{% url_replace request 'page' books.previous_page_number %}" class="btn btn-primary">Previous</a>
+			        {% endif %}
+
+			        <span class="current">
+			            &nbsp;&nbsp;&nbsp;&nbsp;Page {{ books.number }} of {{ books.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+			        </span>
+
+			        {% if books.has_next %}
+			            <a href="?{% url_replace request 'page' books.next_page_number %}" class="btn btn-primary">Next</a>
+			        {% endif %}
+			    </span>
+			</div>
+
+		{% else %} <p>No results to show.</p>
+		{% endif %}
+	</div>
+
+	<script type='text/javascript'>	
+		$(document).ready(function() {
+
+			$(".owned_books").multiselect();
+			$(".owned_books").on('change', function(e) {
+				var bookISBN = $(this).attr('id');
+				console.log(bookISBN);
+				var optionSelected = $("option:selected", this);
+				var valueSelected = this.value;
+				console.log(valueSelected);
+
+				if(valueSelected=="none"){
+					location.reload();
+				}
+
+				// send request now
+				$.post("{% url 'owned_books_api' %}", {
+					'bookISBN': bookISBN,
+					'status': valueSelected,
+				}, function(data) {
+
+					console.log(data);
+					
+				});
+			});
+		});
+    	
+    </script>
+{% endblock %}

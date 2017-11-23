@@ -44,6 +44,8 @@
 			<a href="{% url 'preferred_genres' %}" class="btn btn-primary">Enter preferred genres</a><br><br>
 			<a href="{% url 'message' %}"  class="btn btn-primary">My Messages</a><br><br>
 			<a href="{% url 'advanced_search' %}" class="btn btn-success">Search books</a><br><br>
+			<a href="{% url 'wishlist_api' %}" class="btn btn-success">Wishlist</a>
+			<a href="{% url 'owned_books_api' %}" class="btn btn-success">Owned books</a>
 			{# <a href="{% url 'my_books' %}"></a> #}
 
 			<form action="{% url 'logout_view' %}" method="POST">
