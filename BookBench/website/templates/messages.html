@@ -24,7 +24,7 @@
 				{% endfor %}
 				
 			{% else %} <p>No messages to show.</p>
-			{% endif %}
+			{% endif %}	 	
 
 	</div>
 
@@ -33,7 +33,7 @@
 			{% if outbox %}
 				{% for message in outbox %}
 				<div class="jumbotron">
-					<h4><a href="{% url 'user_details' message.receiver.ID %}">{{message.receiver.get_full_name}}</a></h4>
+					<h4><a href="{% url 'user_details' message.receiver.ID %}">{{message.receiver.get_full_name}}</a	></h4>
 					<b>Text:</b> {{message.message_text}} <br>
 					<b>Time:</b>{{message.message_timestamp}}<br>
 				</div>
@@ -44,11 +44,13 @@
 
 	</div>	
 
-	<div  class = 'content_compose' style = "position :'fixed';">
+	<div  class = 'content_compose jumbotron' style = "position:fixed; bottom:0; right:0; width :60%; height : 50%; background-color: lightblue;">
 		<h4>Compose</h4>
-		Email ID : <br><input type = "email" name = 'email_id' id = "email_id"> <br>
-		Message : <br><input type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
-		<button type="submit" value="Submit" class = 'Send'>Send</button>		
+		Email ID : <input align = "70%" type = "email" name = 'email_id' id = "email_id"> <br>
+		Message :  <input width = "70%" type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
+		<button type="submit" value="Submit" class = 'Send'>Send</button>
+		<button type="submit" value="Close" class = 'Close'>Close</button>		
+
 	</div>
 
 	<script type='text/javascript'>	
@@ -89,6 +91,10 @@
 							location.reload();
 						}
 					});
+			});
+
+			$(".Close").click(function(){
+				$(".content_compose").hide();
 			});
 
 			$(".reply").click(function(){
