@@ -44,6 +44,27 @@
 		                <li>
 		                    <a href="{% url 'owned_books_api' %}"> Owned Books </a>
 		                </li> 
+
+		                {% if request.user.status != 'US' %}
+		                <div class="dropdown">
+						    <button class="dropbtn"> {% if request.user.status == 'AD' %} Admin {% else %} Moderator {% endif %} 
+						      <i class="fa fa-caret-down"></i>
+						    </button>
+						    
+						    <div class="dropdown-content">
+						    {% if request.user.status == 'AD' %}
+								<a href="{% url 'add_books' %}">Add new Books</a>
+								<a href="{% url 'add_publications' %}">Add new publications</a>
+								<a href="{% url 'add_authors' %}">Add new authors</a>
+								<a href="{% url 'add_genres' %}">Add new genres</a>
+								<a href="{% url 'add_moderators' %}">Add moderators</a>
+								<a href="{% url 'check_report_user' %}">Check User Reports</a>
+								<a href="{% url 'banned_users' %}">See banned users</a>
+						    {% endif %}
+						    	<a href="{% url 'check_report' %}">Check Reports</a>	
+						    </div>
+					  	</div>
+					  	{% endif %}
 		                <li>
 		                    <a href="{% url 'logout_view' %}">
 		                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
@@ -61,6 +82,7 @@
 
 	    </div>
 	</nav>
+
 
 	{% block content %}
 	{% endblock %}

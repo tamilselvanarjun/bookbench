@@ -2,16 +2,26 @@
 
 {% block title %}Register for BookBench{% endblock %}
 
+<div class="header-w3l">
+		<h1>BookBench Register</h1>
+</div>
+
 {% block content %}
-<form id="normal_user_form" method="post" action="/register/"
-        enctype="multipart/form-data">
+<div class="main-content-agile">
+	<div class="sub-main-w3">
+		<form id="normal_user_form" method="post" action="/register/"
+		        enctype="multipart/form-data">
 
-    {% csrf_token %}
+		    {% csrf_token %}
 
+		    <font color="white">First Name:</font> {{ normal_user_form.first_name }}<br>
+		    <font color="white">Last Name:</font> {{ normal_user_form.last_name }}<br>
+		    <font color="white">E-mail:</font> {{ normal_user_form.email }}<br>
+		    <font color="white">Password:</font> {{ normal_user_form.password }}<br>
 
-    {{ normal_user_form.as_p }}
-
-    <input type="submit" name="submit" value="Register" />
-</form>
+		    <input type="submit" name="submit" value="Register" />
+		</form>
+	</div>
+</div>
 
 {% endblock %}

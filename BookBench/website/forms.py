@@ -8,11 +8,16 @@ USER_STATUS_CHOICES = (
 )
 
 class NormalUserForm(forms.ModelForm):
-	password = forms.CharField(widget=forms.PasswordInput())
+	password = forms.CharField(widget=forms.PasswordInput(attrs = {'class':'pass','placeholder':'Password','required':''}))
 
 	class Meta:
 		model = User
 		fields = {'first_name', 'last_name', 'email', 'password'}
+		widgets = {
+			'first_name': forms.TextInput(attrs = {'class':'user','placeholder':'First Name','required':''}),
+			'last_name': forms.TextInput(attrs = {'class':'user','placeholder':'Last Name','required':''}),
+			'email': forms.TextInput(attrs = {'class':'user','placeholder':'E-mail','required':''})
+		}
 
 class AdminUserForm(forms.ModelForm):
 	password = forms.CharField(widget = forms.PasswordInput())
