@@ -7,6 +7,9 @@
 		{% endblock %}
 	</title>
 	{% include "base_css.html" %}
+	<b>You are at : </b>
+	<div id = "long"></div>
+	<div id = "lati"></div>
 </head>
 <body>
 	{% block content %}
@@ -24,6 +27,9 @@
 						'lat' : lat,
 					}, function(data) {
 						console.log(data);
+						showdata = "<b>longitude = "+ lon
+						showdata += " latitude = "+ lat + "</b>"
+						$("#long").html(showdata);
 					});
 				});
 			}

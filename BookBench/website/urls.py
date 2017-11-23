@@ -8,7 +8,6 @@ urlpatterns = [
     url(r'^home/$', home_page, name='home_page'),
     url(r'^logout/$', logout_view, name='logout_view'),
 
-    # url(r'^projectbackend/', admin.site.urls),
     url(r'^register/$', register_view, name='register'),
     url(r'^registeradmin/$', register_admin_view, name='register_admin_view'),
     
@@ -31,6 +30,7 @@ urlpatterns = [
     # search user who have the books
     url(r'^userbook/(?P<ISBN>[a-zA-Z0-9\-]+)$', userbook, name='userbook'),
 
+    # api calls
     url(r'^api/update_rating$', update_rating_api, name='update_rating_api'),
     url(r'^api/update_review$', update_review_api, name='update_review_api'),
     url(r'^api/update_location$', update_location_api, name='update_location_api'),
