@@ -22,6 +22,13 @@ def main_login_page(request):
 	if request.method == "GET":
 		# check for user
 		if request.user.is_authenticated():
+			genres = user.preferred_genres.all()
+			# ctx = {}
+			# if genres:
+			# 	count = 0
+			# 	for g in genres:
+			# 		ctx[str(count)] = g.name
+			# 		ctx['books'+str(count)] = 
 			return HttpResponseRedirect(reverse("home_page"))
 		else:
 			form = UserLoginForm()

@@ -34,8 +34,8 @@ body {
     text-align: center;
 	font-family: 'Open Sans', sans-serif;
 }
-
-/*Drop down button*/
+/*
+/*Drop down button
 .dropdown {
     float: left;
     overflow: hidden;
@@ -76,7 +76,7 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
+*/
 /*--header--*/
 
 .header-w3l{

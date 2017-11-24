@@ -88,7 +88,7 @@ DATABASES = {
 		'NAME'		: 'backend',
 		'USER'		: 'rohitrango',
 		'PASSWORD'	: '',
-		'HOST'		: '10.196.22.201',
+		'HOST'		: '192.168.0.105',
 		'PORT'		: 5610,
 	}
 }

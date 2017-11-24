@@ -8,7 +8,11 @@
 	</title>
 	{% load static %}
 	{% include "base_css.html" %}
-	
+	<script src="resource/js/jquery-1.11.0.js"></script>
+<script src="resources/js/bootstrap.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 
 <body >
@@ -46,11 +50,29 @@
 		                </li> 
 
 		                {% if request.user.status != 'US' %}
-		                <div class="dropdown">
-						    <button class="dropbtn"> {% if request.user.status == 'AD' %} Admin {% else %} Moderator {% endif %} 
+
+		                <li class="dropdown">
+					      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if request.user.status == 'AD' %} Admin {% else %} Moderator {% endif %} <b class="caret"></b></a>
+
+					      <ul class="dropdown-menu" role="menu">
+					      {% if request.user.status == 'AD' %}
+					        <li><a href="{% url 'add_books' %}">Add new Books</a></li>
+					        <li><a href="{% url 'add_publications' %}">Add new publications</a></li>
+					        <li><a href="{% url 'add_authors' %}">Add new authors</a></li>
+					        <li><a href="{% url 'add_genres' %}">Add new genres</a></li>
+					        <li><a href="{% url 'add_moderators' %}">Add moderators</a></li>
+					        <li><a href="{% url 'check_report_user' %}">Check User Reports</a></li>
+							<li><a href="{% url 'banned_users' %}">See banned users</a></li>
+						   {% endif %}
+						    <li><a href="{% url 'check_report' %}">Check Reports</a></li>
+					      </ul>
+					    </li>
+
+		                <!-- <li class="dropdown">
+						    <button class="dropbtn"> 
 						      <i class="fa fa-caret-down"></i>
 						    </button>
-						    
+
 						    <div class="dropdown-content">
 						    {% if request.user.status == 'AD' %}
 								<a href="{% url 'add_books' %}">Add new Books</a>
@@ -63,7 +85,7 @@
 						    {% endif %}
 						    	<a href="{% url 'check_report' %}">Check Reports</a>	
 						    </div>
-					  	</div>
+					  	</li> -->
 					  	{% endif %}
 		                <li>
 		                    <a href="{% url 'logout_view' %}">
@@ -89,6 +111,9 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+
+			$('dropdown-toggle').dropdown()
+
 			/* location */
 			if(navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(function(data){
