@@ -10,8 +10,19 @@
 			<h3>{{ user.get_full_name }}</h3>
 			<p class="text-warning">{{user.get_status_display}}</p>
 			{# give user report button #}
+			<button class = 'compose' type = 'submit'>Send Message</button>
+			<br><br><br><br>
 			<button class="btn btn-danger" id="report_prompt">Report User</button>
 		</div>
+
+		<div  class = 'content_compose jumbotron' style = "position:fixed; bottom:0; right:0; width :60%; height : 50%; background-color: lightblue;">
+			<h4>Message</h4>
+			Message :  <input width = "70%" type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
+			<button type="submit" value="Submit" class = 'Send' id="{{user.email}}">Send</button>
+			<button type="submit" value="Close" class = 'Close'>Close</button>		
+
+		</div>
+
 
 		{# report UI #}
 		<div id="report_user" class="dialog" style="display: none;" title="Report this user" width="70%">
@@ -28,6 +39,8 @@
 					width: "90%",
 					maxWidth: "768px",
 				});
+
+				$(".content_compose").hide();
 
 				document.getElementById("report_user").style.display = "";
 
@@ -56,6 +69,34 @@
 
 				});
 
+				$(".compose").click(function(){
+					$(".content_compose").show();
+				});
+
+				$(".Send").click(function(){
+					var email_id = $(this).attr("id");
+					alert(email_id);
+					var message_text = $("#message_text").val();
+					$.post("{% url 'add_message_api' %}", {
+							'email_id': email_id,
+							'message_text': message_text,
+						}, function(data){
+							if (data == "-1"){
+								alert("Some error in sending the message");
+							}
+							else if (data == "-2"){
+								alert("Enter Valid Email ID");
+							}
+							else{
+								alert("Message sent successfully");
+								location.reload();
+							}
+						});
+				});
+
+				$(".Close").click(function(){
+					$(".content_compose").hide();
+				});
 
 			});
 		</script>
