@@ -63,24 +63,6 @@
 					      </ul>
 					    </li>
 
-		                <!-- <li class="dropdown">
-						    <button class="dropbtn"> 
-						      <i class="fa fa-caret-down"></i>
-						    </button>
-
-						    <div class="dropdown-content">
-						    {% if request.user.status == 'AD' %}
-								<a href="{% url 'add_books' %}">Add new Books</a>
-								<a href="{% url 'add_publications' %}">Add new publications</a>
-								<a href="{% url 'add_authors' %}">Add new authors</a>
-								<a href="{% url 'add_genres' %}">Add new genres</a>
-								<a href="{% url 'add_moderators' %}">Add moderators</a>
-								<a href="{% url 'check_report_user' %}">Check User Reports</a>
-								<a href="{% url 'banned_users' %}">See banned users</a>
-						    {% endif %}
-						    	<a href="{% url 'check_report' %}">Check Reports</a>	
-						    </div>
-					  	</li> -->
 					  	{% endif %}
 		                <li>
 		                    <a href="{% url 'logout_view' %}">

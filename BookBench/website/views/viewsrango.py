@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.urls import reverse
-from django.db.models import Avg, Sum, Count, When, Case, Value, IntegerField
+from django.db.models import Avg, Sum, Count, When, Case, Value, IntegerField, Q, Max
 from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import *
@@ -117,17 +117,21 @@ def advanced_search(request):
 
 		#################################
 
-		qs = qs.annotate(wish_status = Case(
+		wish_whens = [
 			When(Q(userwishlist__status='RE')&Q(userwishlist__user=user),then=Value(0)),
 			When(Q(userwishlist__status='CR')&Q(userwishlist__user=user),then=Value(1)),
 			When(Q(userwishlist__status='WR')&Q(userwishlist__user=user),then=Value(2)),
-			default = Value(-1),output_field=IntegerField()))
+		]
+		wish_case = Case(*wish_whens, output_field=IntegerField(), default = Value(-1))
+		qs = qs.annotate(wish_status = Max(wish_case))
 
-		qs = qs.annotate(owned_status = Sum(Case(
+		owned_whens = [
 			When(Q(userownedbook__status='AV')&Q(userownedbook__user=user),then=Value(0)),
 			When(Q(userownedbook__status='UA')&Q(userownedbook__user=user),then=Value(1)),
 			When(Q(userownedbook__status='LE')&Q(userownedbook__user=user),then=Value(2)),
-			default = Value(-1),output_field=IntegerField())))
+		]
+		owned_case = Case(*owned_whens, output_field=IntegerField(), default = Value(-1))
+		qs = qs.annotate(owned_status = Max(owned_case))
 
 		#################################
 
@@ -452,3 +456,9 @@ def unban_banned_user(request):
 	banned_user.active = True
 	banned_user.save()
 	return HttpResponse(1)
+
+# wish_whens = [
+# 			When(Q(userwishlist__status='RE')&Q(userwishlist__user__id=10),then=Value(0)),
+# 			When(Q(userwishlist__status='CR')&Q(userwishlist__user__id=10),then=Value(1)),
+# 			When(Q(userwishlist__status='WR')&Q(userwishlist__user__id=10),then=Value(2)),
+# 		]
