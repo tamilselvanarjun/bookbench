@@ -21,7 +21,8 @@ def main_login_page(request):
 	# This is the main login page
 	if request.method == "GET":
 		# check for user
-		if request.user.is_authenticated():
+		user=request.user
+		if user.is_authenticated():
 			genres = user.preferred_genres.all()
 			# ctx = {}
 			# if genres:
