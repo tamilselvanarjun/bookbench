@@ -86,6 +86,10 @@
 						if (data == "-1"){
 							alert("Some error in sending the message");
 						}
+						else if (data == "-2"){
+							alert("Enter Valid Email ID");
+							$("#email_id").val("");
+						}
 						else{
 							alert("Message sent successfully");
 							location.reload();

@@ -90,7 +90,10 @@ def add_message_api(request):
 		user = request.user
 		email_id = request.POST['email_id']
 		message_text = request.POST['message_text']
-		receiver = User.objects.get(email=email_id)
-		message = Message.objects.create(sender=user, receiver=receiver, message_text=message_text)
-		message.save()
-		return HttpResponse(0)
+		receiver = User.objects.filter(email=email_id)
+		if receiver: 
+			message = Message.objects.create(sender=user, receiver=receiver[0], message_text=message_text)
+			message.save()
+			return HttpResponse(0)
+		else:
+			return HttpResponse(-2)
