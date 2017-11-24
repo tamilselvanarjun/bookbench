@@ -24,7 +24,8 @@
 			{% if userbooks %}
 				{% for userbook in userbooks %}
 					<div class="jumbotron">
-						<b>User profile</b> {{userbook.user.get_full_name}} <br>
+						<b>User profile</b> <a href="{% url 'user_details' userbook.user.ID %}">{{userbook.user.get_full_name}}</a>
+						 <br>
 						<b>Status</b> {{userbook.get_status_display}} <br>
 					</div>
 				{% endfor %}
