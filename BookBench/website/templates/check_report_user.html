@@ -14,7 +14,7 @@
 		</div>
 
 		{% if results %} 
-		<h4>Search User results</h4> 
+		<h4><font color="white">See User results</font></h4> 
 			{% if reports %}
 				{% for report in reports %}
 				<div class="jumbotron" id = "div_{{report.ID}}">
@@ -26,7 +26,7 @@
 					<button type = "submit" class = "delete_user" value="{{report.ID}}" id = "{{report.on_user.ID}}">Ban User !</button> 	
 				</div>
 				{% endfor %}
-			{% else %} <p>No results to show.</p>
+			{% else %} <p><font color="white">No results to show.</font></p>
 			{% endif %}
 		{% endif %}
 
@@ -53,6 +53,11 @@
 				$.post("{% url 'delete_user_api' %}", { 'deleteID' : delete_id}, function(data){
 					console.log(data);
 					parent.hide();
+				});
+				$.post("{% url 'delete_report_user_api' %}", {
+					'reportID': report_id,
+				}, function(data) {
+					console.log(data);
 				});
 			});	
 		});

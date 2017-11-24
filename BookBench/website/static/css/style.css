@@ -30,6 +30,7 @@ img{max-width:100%;}
 body {
     background:url('../images/home-1.jpg');
     /*no-repeat 62% 90%;*/
+    color:black;
     background-size: cover;
     text-align: center;
 	font-family: 'Open Sans', sans-serif;
@@ -120,6 +121,35 @@ body {
     border: 2px solid #fff;
     width: 67px;
 }
+
+.sub-main-w4 input[type="text"],.sub-main-w3 input[type="password"] {
+    outline: none;
+    font-size: 1.1em;
+    padding: 20px 10px 20px 10px;
+    border: none;
+    margin: 0 0 15px 0;
+    font-family: 'Open Sans', sans-serif;
+    background: none;
+    border-bottom: 2px solid #eee;
+    width: 20%;
+    color: white;
+    font-weight: 600;
+}
+.sub-main-w4 input[type="submit"] {
+	background: url('../images/arrow.png') no-repeat 30% 45%;
+    height: 67px;
+    outline: none;
+    margin-top: 38px;
+    font-size: 1.3em;
+    border-radius: 15px;
+    cursor: pointer;
+    border: 2px solid #fff;
+    width: 200px;
+    color: white;
+}
+
+
+
 /*--//main--*/
 
 /*--footer--*/

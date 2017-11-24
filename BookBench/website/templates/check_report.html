@@ -14,7 +14,7 @@
 		</div>
 
 		{% if results %} 
-		<h4>Search results</h4> 
+		<h4><font color="white">See reports</font></h4> 
 			{% if reports %}
 				{% for report in reports %}
 				<div class="jumbotron" id = "div_{{report.ID}}">
@@ -27,7 +27,7 @@
 					<button type = "submit" class = "delete_review" value="{{report.ID}}" id = "{{report.on_review.ID}}">Delete Review</button> 	
 				</div>
 				{% endfor %}
-			{% else %} <p>No results to show.</p>
+			{% else %} <p><font color="white">No results to show.</font></p>
 			{% endif %}
 		{% endif %}
 
