@@ -42,7 +42,9 @@
 			{% if not my_review %}
 				{# if there is no rating, then add one #}
 				<form action="" id="reviewForm">
-					<textarea name="my_review" id="my_review" maxlength="1000" cols="100" rows="10"></textarea> <br>
+					<div class="form-group">
+					  <textarea name="my_review" id="my_review" maxlength="1000" rows="10" class="form-control" rows="5"></textarea>
+					</div>
 					<button type="button" id="submit_review" class="btn btn-primary">Post review</button>
 				</form>
 			{% else %}
@@ -153,7 +155,9 @@
 
 	{# div for reporting #}
 	<div id="report_dialog" class="dialog" style="display: none;" title="Report this post" width="70%">
-		<textarea name="" id="report_text" cols="100" rows="10"></textarea>
+		<div class="form-group">
+		  <textarea class="form-control" name="" id="report_text" rows="10"></textarea>
+		</div>
 		<button type="button" class="btn btn-warning" id="submit_report">Report</button>
 	</div>
 

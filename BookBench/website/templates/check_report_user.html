@@ -22,8 +22,8 @@
 					<b>Description:</b> {{report.text}} <br>
 					<b>Reported User Name:</b>{{report.on_user.get_full_name}}<br>
 					<b>Reported By: </b>{{report.report_user.get_full_name}}<br>
-					<button type = "submit" class = "remove_report_user" id="{{report.ID}}">Remove Report</button>
-					<button type = "submit" class = "delete_user" value="{{report.ID}}" id = "{{report.on_user.ID}}">Ban User !</button> 	
+					<button type = "submit" class = "remove_report_user btn btn-warning" id="{{report.ID}}">Remove Report</button>
+					<button type = "submit" class = "delete_user btn btn-danger" value="{{report.ID}}" id = "{{report.on_user.ID}}">Ban User !</button> 	
 				</div>
 				{% endfor %}
 			{% else %} <p><font color="white">No results to show.</font></p>

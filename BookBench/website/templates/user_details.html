@@ -10,24 +10,26 @@
 			<h3>{{ user.get_full_name }}</h3>
 			<p class="text-warning">{{user.get_status_display}}</p>
 			{# give user report button #}
-			<button class = 'compose' type = 'submit'>Send Message</button>
-			<br><br><br><br>
+			<button class = 'compose btn btn-success' type = 'submit'>Send Message</button>
 			<button class="btn btn-danger" id="report_prompt">Report User</button>
 		</div>
 
-		<div  class = 'content_compose jumbotron' style = "position:fixed; bottom:0; right:0; width :60%; height : 50%; background-color: lightblue;">
+		
+		<!--message-->
+		<div id="showMessageBox" style="display: none;">
 			<h4>Message</h4>
-			Message :  <input width = "70%" type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
-			<button type="submit" value="Submit" class = 'Send' id="{{user.email}}">Send</button>
-			<button type="submit" value="Close" class = 'Close'>Close</button>		
-
+			<div class="form-group">
+				<textarea name="message_text" id="message_text" rows="10" class="form-control"></textarea>
+			</div>
+			<button type="submit" value="Submit" class = 'Send btn btn-success' id="{{user.email}}">Send</button>
+			<button type="submit" value="Close" class = 'Close btn btn-warning'>Close</button>		
 		</div>
 
 
 		{# report UI #}
 		<div id="report_user" class="dialog" style="display: none;" title="Report this user" width="70%">
 			Do you want to report this user?
-			<textarea name="" id="text" cols="100" rows="10">Your report here</textarea> <br>
+			<textarea name="" id="text" class="form-control" rows="10" placeholder="Your report here"></textarea> <br>
 			<button type="button" class="btn btn-warning" id="submit_report">Report</button>
 		</div>
 
@@ -40,7 +42,12 @@
 					maxWidth: "768px",
 				});
 
-				$(".content_compose").hide();
+				$("#showMessageBox").dialog({
+					autoOpen: false,
+					title: 'Send message',
+					width: "90%",
+					maxWidth: "768px",
+				});
 
 				document.getElementById("report_user").style.display = "";
 
@@ -70,32 +77,37 @@
 				});
 
 				$(".compose").click(function(){
-					$(".content_compose").show();
+					$("#showMessageBox").show();
+					$("#showMessageBox").dialog("open");
 				});
 
 				$(".Send").click(function(){
 					var email_id = $(this).attr("id");
-					alert(email_id);
 					var message_text = $("#message_text").val();
-					$.post("{% url 'add_message_api' %}", {
-							'email_id': email_id,
-							'message_text': message_text,
-						}, function(data){
-							if (data == "-1"){
-								alert("Some error in sending the message");
-							}
-							else if (data == "-2"){
-								alert("Enter Valid Email ID");
-							}
-							else{
-								alert("Message sent successfully");
-								location.reload();
-							}
+					if(message_text.length > 0) {
+						$.post("{% url 'add_message_api' %}", {
+								'email_id': email_id,
+								'message_text': message_text,
+							}, function(data){
+								if (data == "-1"){
+									alert("Some error in sending the message");
+								}
+								else if (data == "-2"){
+									alert("Enter Valid Email ID");
+								}
+								else{
+									alert("Message sent successfully");
+									location.reload();
+								}
 						});
+					}
+					else {
+						alert("Please enter a message");
+					}
 				});
 
 				$(".Close").click(function(){
-					$(".content_compose").hide();
+					$("#showMessageBox").dialog("close");
 				});
 
 			});

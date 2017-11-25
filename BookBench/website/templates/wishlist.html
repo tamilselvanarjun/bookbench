@@ -51,16 +51,16 @@
 			{# Here the book thingy ends #}
 			<div class="pagination text-center container">
 			    <span class="step-links">
-			        {% if books.has_previous %}
-			            <a href="?{% url_replace request 'page' books.previous_page_number %}" class="btn btn-primary">Previous</a>
+			        {% if wishlist_books.has_previous %}
+			            <a href="?{% url_replace request 'page' wishlist_books.previous_page_number %}" class="btn btn-primary">Previous</a>
 			        {% endif %}
 
 			        <span class="current">
-			            &nbsp;&nbsp;&nbsp;&nbsp;Page {{ books.number }} of {{ books.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
+			            &nbsp;&nbsp;&nbsp;&nbsp;Page {{ wishlist_books.number }} of {{ wishlist_books.paginator.num_pages }}&nbsp;&nbsp;&nbsp;&nbsp;
 			        </span>
 
-			        {% if books.has_next %}
-			            <a href="?{% url_replace request 'page' books.next_page_number %}" class="btn btn-primary">Next</a>
+			        {% if wishlist_books.has_next %}
+			            <a href="?{% url_replace request 'page' wishlist_books.next_page_number %}" class="btn btn-primary">Next</a>
 			        {% endif %}
 			    </span>
 			</div>

@@ -63,8 +63,10 @@ def preferred_genres(request):
 	# process the form
 	else:
 		genre_list = request.POST.getlist('genres')
-		user.preferred_genres.remove()
+		for g in user.preferred_genres.all():
+			user.preferred_genres.remove(g)
 		for g in genre_list:
+			print(g)
 			query = Genre.objects.get(name=g)
 			user.preferred_genres.add(query)
 		user.save()

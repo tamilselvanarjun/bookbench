@@ -23,9 +23,65 @@
 				<h3>{{ user.get_full_name }}</h3>
 				<p class="text-warning">{{user.get_status_display}}</p>
 			</div>
+		</div>
+
+
+		<!-- Here goes my carousel -->
+		<div id="carousel" class="carousel slide" data-ride="carousel">
+
+			<h2 style="color:white">Books recommended based on your genres</h2>
 			
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+				{% for book in reco %}
+					<li data-target="#carousel" data-slide-to="{{forloop.counter}}"></li>
+				{% endfor %}	
+			</ol>
+
+			<!-- Wrapper for slides -->
+			<div class="carousel-inner">
+				{% for book in reco %}
+					{% if forloop.counter == 1 %}
+						<div class="item active">
+							<div class="container">
+								<div class="jumbotron" style="height:500px">
+									<img src="{{ book.picture.url }}" alt="{{book.name|capfirst}}" width="25%" height="25%"> <br>
+									<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+									<b>ISBN:</b> {{book.ISBN}} <br>
+									<b>Description:</b> {{book.description|capfirst}} <br>
+									
+									<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+									<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+									<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<div class="item">
+							<div class="container">
+								<div class="jumbotron" style="height:500px">
+									<img src="{{ book.picture.url }}" alt="{{book.name|capfirst}}" width="25%" height="25%"> <br>
+									<h4><a href="{% url 'book_details' book.ISBN %}">{{book.name|capfirst}}</a></h4>
+									<b>ISBN:</b> {{book.ISBN}} <br>
+									<b>Description:</b> {{book.description|capfirst}} <br>
+									
+									<b>Authors:</b> {% for author in book.authors.all %} <a href="{% url 'author_details' author.ID %}" class="text-success">{{author.name}}</a> {% endfor %} <br>
+									<b>Genres:</b> {% for genre in book.genres.all %} <a href="{% url 'genre_details' genre.ID %}" class="text-success">{{genre.name}}</a> {% endfor %} <br>
+									<b>Publication:</b> <a href="{% url 'publication_details' book.publication.ID %}" class="text-success">{{book.publication.name}}</a> <br>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}				
+			</div>
+
+			<!-- Controls -->
+			<a href="#carousel" class="left carousel-control" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span><span class="sr-only">Previous</span></a>
+
+			<a class="right carousel-control" href="#carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span><span class="sr-only">Next</span></a>
 			
 		</div>
+
 
 		<!-- handler for changing profile picture -->
 		<script type="text/javascript">

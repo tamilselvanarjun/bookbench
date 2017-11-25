@@ -74,7 +74,13 @@ def home_page(request):
 		user = request.user
 		if user.is_authenticated():
 			# user is authenticated, show stuff here
-			return render(request, '../templates/homepage.html', {'user': user})
+			genres = user.preferred_genres.all()
+			books = Book.objects.filter(genres__in=genres)
+			if books.count() < 5:
+				books = books.order_by("?")[:5]
+			else:
+				books = Book.objects.all().order_by("?")[:5]
+			return render(request, '../templates/homepage.html', {'user': user, 'reco': books})
 		else:
 			messages.add_message(request, messages.ERROR, 'Login first')
 			return HttpResponseRedirect(reverse("main_login_page"))

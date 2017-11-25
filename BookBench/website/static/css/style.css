@@ -35,6 +35,14 @@ body {
     text-align: center;
 	font-family: 'Open Sans', sans-serif;
 }
+
+.white {
+	color: white;
+}
+
+.jumbotron {
+	background-color:rgba(255, 255, 255, 0.5);
+}
 /*
 /*Drop down button
 .dropdown {

@@ -5,9 +5,9 @@
 {% block content %}
 	{% load mytags %}
 	<div class="container">
-		<button class = 'inbox' type = 'submit'>Inbox</button>
-		<button class = 'outbox' type = 'submit'>Outbox</button>
-		<button class = 'compose' type = 'submit'>Compose</button>
+		<button class = 'inbox btn btn-primary' type = 'submit'>Inbox</button>
+		<button class = 'outbox btn btn-primary' type = 'submit'>Outbox</button>
+		<button class = 'compose btn btn-primary' type = 'submit'>Compose</button>
 	</div>
 
 	<div class='content_inbox'>
@@ -19,7 +19,7 @@
 					<h4><a href="{% url 'user_details' message.sender.ID %}">{{message.sender.get_full_name}}</a></h4>
 					<b>Text:</b> {{message.message_text}} <br>
 					<b>Time:</b>{{message.message_timestamp}}<br>
-					<button class = 'reply' type="submit" id = "{{message.sender.email}}">Reply</button>
+					<button class = 'reply btn-success btn' type="submit" id = "{{message.sender.email}}">Reply</button>
 				</div>
 				{% endfor %}
 				
@@ -44,12 +44,11 @@
 
 	</div>	
 
-	<div  class = 'content_compose jumbotron' style = "position:fixed; bottom:0; right:0; width :60%; height : 50%; background-color: lightblue;">
-		<h4>Compose</h4>
-		Email ID : <input align = "70%" type = "email" name = 'email_id' id = "email_id"> <br>
-		Message :  <input width = "70%" type = "textarea" rows = '10' cols = '50' name = 'message_text' id ='message_text'> <br>
-		<button type="submit" value="Submit" class = 'Send'>Send</button>
-		<button type="submit" value="Close" class = 'Close'>Close</button>		
+	<div  class = 'dialog' id="dialog" style="display: none">
+		<input align = "70%" type = "email" class="form-control" name = 'email_id' id = "email_id" placeholder="Email ID"> <br>
+		<div class="form-group"><textarea name="message_text" id="message_text" rows="10" class="form-control" placeholder="Message"></textarea></div>
+		<button type="submit" value="Submit" class = 'Send btn btn-success'>Send</button>
+		<button type="submit" value="Close" class = 'Close btn btn-warning'>Close</button>		
 
 	</div>
 
@@ -57,52 +56,62 @@
 
 		$(document).ready(function() {
 			$(".content_outbox").hide();
-			$(".content_compose").hide();
+			$("#dialog").show();
+			// $(".content_compose").hide();
+			$("#dialog").dialog({
+				autoOpen: false,
+				title: 'Send message',
+				width: "90%",
+				maxWidth: "768px",
+			})
 
 			$(".inbox").click(function() {
 				$(".content_inbox").show();
 				$(".content_outbox").hide();
-				$(".content_compose").hide();
 			});
 
 			$(".outbox").click(function(){
 				$(".content_inbox").hide();
 				$(".content_outbox").show();
-				$(".content_compose").hide();
 			});
 
 
 			$(".compose").click(function(){
-				$(".content_compose").show();
+				$("#dialog").dialog("open");
 			});
 
 			$(".Send").click(function(){
 				var email_id = $("#email_id").val();
 				var message_text = $("#message_text").val();
-				$.post("{% url 'add_message_api' %}", {
-						'email_id': email_id,
-						'message_text': message_text,
-					}, function(data){
-						if (data == "-1"){
-							alert("Some error in sending the message");
-						}
-						else if (data == "-2"){
-							alert("Enter Valid Email ID");
-							$("#email_id").val("");
-						}
-						else{
-							alert("Message sent successfully");
-							location.reload();
-						}
-					});
+				if(message_text.length>0) {
+					$.post("{% url 'add_message_api' %}", {
+							'email_id': email_id,
+							'message_text': message_text,
+						}, function(data){
+							if (data == "-1"){
+								alert("Some error in sending the message");
+							}
+							else if (data == "-2"){
+								alert("Enter Valid Email ID");
+								$("#email_id").val("");
+							}
+							else{
+								alert("Message sent successfully");
+								location.reload();
+							}
+						});
+				}
+				else {
+					alert("Enter a message");
+				}
 			});
 
 			$(".Close").click(function(){
-				$(".content_compose").hide();
+				$("#dialog").dialog("close");
 			});
 
 			$(".reply").click(function(){
-				$(".content_compose").show();
+				$("#dialog").dialog("open");
 				var sender_email = $(this).attr("id");
 				$("#email_id").val(sender_email);
 			});

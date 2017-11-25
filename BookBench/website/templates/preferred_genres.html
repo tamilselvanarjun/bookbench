@@ -8,7 +8,7 @@
 	
 	<form action="" method="POST">
 	 	{% csrf_token %}
-		<select multiple="multiple" id="my-select" name="genres">
+		<select multiple="multiple" id="my-select" name="genres" style="overflow-y:scroll;">
 			{% for genre in genres %}
 				<option value="{{ genre.name }}" {% if genre in user.preferred_genres.all %}selected{% endif %}>{{genre.name}}</option>
 			{% endfor %}  
@@ -19,7 +19,9 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
-        $('#my-select').multiselect();
+        $('#my-select').multiselect({
+        	maxHeight: 300
+        });
     });
 </script>
 {% endblock %}
