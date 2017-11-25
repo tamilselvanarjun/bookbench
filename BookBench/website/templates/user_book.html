@@ -19,21 +19,33 @@
 		</div>
 
 
+		<div class="row">
+			<h4 style="color: white;">Users who have this book</h4><br>
+			<div class="col-sm-4">
+				{% if userbooks %}
+					{% for userbook in userbooks %}
+						<div class="jumbotron">
+							<a href="{% url 'user_details' userbook.user.ID %}">{{userbook.user.get_full_name}}</a>
+							 <br>
+							<b>Status</b>: {{userbook.get_status_display}} <br>
+						</div>
+					{% endfor %}
+				{% else %}
+					No users have this book. :(
+				{% endif %}
+			</div>
+			<div class="col-sm-8">
+				<div class="map" style="height: 500px; max-width: none;"></div>
+			</div>
+
+		</div>
+
 		<div class="container">
-			<h4>Users who have this book</h4>
-			{% if userbooks %}
-				{% for userbook in userbooks %}
-					<div class="jumbotron">
-						<b>User profile</b> <a href="{% url 'user_details' userbook.user.ID %}">{{userbook.user.get_full_name}}</a>
-						 <br>
-						<b>Status</b> {{userbook.get_status_display}} <br>
-					</div>
-				{% endfor %}
-			{% else %}
-				No users have this book. :(
-			{% endif %}
+			
 		</div>
 	</div>
+
+
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyAPew6cV1c1yg9gXpzQYvnsQ9cBCDB5EME&sensor=false"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -66,5 +78,4 @@
         {% endfor %}
     });
 </script>
-<div class="map" style="width: 600px; height: 600px; margin-left:auto; margin-right:auto;"></div>
 {% endblock %}
