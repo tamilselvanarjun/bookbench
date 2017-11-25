@@ -29,48 +29,51 @@
 
 	        <div class="collapse navbar-collapse" id="topNavBar">
 	            <ul class="nav navbar-nav navbar-right">
+	            	
 	                {% if request.user.is_authenticated %}
-		                <li>
-		                    <a href="{% url 'preferred_genres' %}"> My Genres </a>
-		                </li>
-		                <li>
-		                    <a href="{% url 'message' %}"> Messages </a>
-	                    </li>
-		                <li>
-		                    <a href="{% url 'advanced_search' %}"> Search Books </a>
-	                    </li>
-		                <li>
-		                    <a href="{% url 'wishlist_api' %}"> My Wishlist </a>
-		                </li>
-		                <li>
-		                    <a href="{% url 'owned_books_api' %}"> Owned Books </a>
-		                </li> 
+	                	{% if request.user.active == True %}
+			                <li>
+			                    <a href="{% url 'preferred_genres' %}"> My Genres </a>
+			                </li>
+			                <li>
+			                    <a href="{% url 'message' %}"> Messages </a>
+		                    </li>
+			                <li>
+			                    <a href="{% url 'advanced_search' %}"> Search Books </a>
+		                    </li>
+			                <li>
+			                    <a href="{% url 'wishlist_api' %}"> My Wishlist </a>
+			                </li>
+			                <li>
+			                    <a href="{% url 'owned_books_api' %}"> Owned Books </a>
+			                </li> 
 
-		                {% if request.user.status != 'US' %}
+			                {% if request.user.status != 'US' %}
 
-		                <li class="dropdown">
-					      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if request.user.status == 'AD' %} Admin {% else %} Moderator {% endif %} <b class="caret"></b></a>
+			                <li class="dropdown">
+						      <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% if request.user.status == 'AD' %} Admin {% else %} Moderator {% endif %} <b class="caret"></b></a>
 
-					      <ul class="dropdown-menu" role="menu">
-					      {% if request.user.status == 'AD' %}
-					        <li><a href="{% url 'add_books' %}">Add new Books</a></li>
-					        <li><a href="{% url 'add_publications' %}">Add new publications</a></li>
-					        <li><a href="{% url 'add_authors' %}">Add new authors</a></li>
-					        <li><a href="{% url 'add_genres' %}">Add new genres</a></li>
-					        <li><a href="{% url 'add_moderators' %}">Add moderators</a></li>
-					        <li><a href="{% url 'check_report_user' %}">Check User Reports</a></li>
-							<li><a href="{% url 'banned_users' %}">See banned users</a></li>
-						   {% endif %}
-						    <li><a href="{% url 'check_report' %}">Check Reports</a></li>
-					      </ul>
-					    </li>
-
-					  	{% endif %}
-		                <li>
-		                    <a href="{% url 'logout_view' %}">
-		                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
-		                    </a>
-		                </li>
+						      <ul class="dropdown-menu" role="menu">
+						      {% if request.user.status == 'AD' %}
+						        <li><a href="{% url 'add_books' %}">Add new Books</a></li>
+						        <li><a href="{% url 'add_publications' %}">Add new publications</a></li>
+						        <li><a href="{% url 'add_authors' %}">Add new authors</a></li>
+						        <li><a href="{% url 'add_genres' %}">Add new genres</a></li>
+						        <li><a href="{% url 'add_moderators' %}">Add moderators</a></li>
+						        <li><a href="{% url 'check_report_user' %}">Check User Reports</a></li>
+								<li><a href="{% url 'banned_users' %}">See banned users</a></li>
+							   {% endif %}
+							    <li><a href="{% url 'check_report' %}">Check Reports</a></li>
+						      </ul>
+						    </li>
+			                {% endif %}
+			            {% endif %}
+			                <li>
+			                    <a href="{% url 'logout_view' %}">
+			                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout
+			                    </a>
+			                </li>
+		                
 		            {% else %}
 		            <li>
 		                    <a href="{% url 'register' %}"> Register </a>
